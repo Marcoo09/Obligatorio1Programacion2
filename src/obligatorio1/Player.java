@@ -8,7 +8,7 @@ public class Player {
     private String nickName;
     private int age;
     private int wonGames;
-    private int color ;
+    private int color;
 
     public Player(String name, String nickName, int age) {
         this.name = name;
@@ -16,6 +16,10 @@ public class Player {
         this.age = age;
         this.wonGames = 0;
         this.color = 0;
+    }
+
+    public int getColor() {
+        return color;
     }
 
     public String getName() {

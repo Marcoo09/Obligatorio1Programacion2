@@ -11,6 +11,7 @@ public class Interface {
 
     public static void main(String[] args) {
         Game game = new Game();
+        GameBoard gameboard;
         
         String[] menuOptions = {"Registrar jugador", "Jugar Partida", "Replicar Partida","Ranking", "Salir"};
         boolean executeProgram = true;
@@ -34,7 +35,9 @@ public class Interface {
                     if(game.getListOfPlayers().size() > 1){
                        Match match = Interface.beginMatch(game);
                        game.addMatch(match);
-                        System.out.println("EMPIEZA EL JUEGO");
+                       System.out.println("EMPIEZA EL JUEGO");
+                       gameboard = new GameBoard(0,match.getPlayers());
+                       gameboard.drawDefaultGameBoard("verr");
                     }else{
                         System.out.println("Se debe registrar por lo menos dos jugadores");
                     }

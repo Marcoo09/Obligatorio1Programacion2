@@ -12,8 +12,9 @@ public class GameBoard {
     private Token[][] tokenState;
     private ArrayList<Player> listOfPlayers;
     
-    public GameBoard(int turn) {
+    public GameBoard(int turn, ArrayList<Player> listOfPlayers) {
         this.turn = turn;
+        this.tokenState = new Token[8][9];
     }
 
     public int getTurn() {
@@ -24,12 +25,29 @@ public class GameBoard {
         this.turn = turn;
     }
     
-    public void drawDefaultGameBoard(){
+    public void drawDefaultGameBoard(String mode){
+        int row = this.tokenState.length;
+        int col = this.tokenState[0].length;        
         int[] tokens = {0,1,2,3,4,5,6,7,8,9};
-        Token currentToken = new Token();
+        this.fillMatrix(tokens);
         
-        /*
-           int[][] initGameBoard = {{0,1,2,3,4,5,6,7,8},{0,0,0,0,0,0,0,0,0},{0,0,0,0,0,0,0,0,0},{0,0,0,0,0,0,0,0,0},{0,0,0,0,0,0,0,0,0},{0,0,0,0,0,0,0,0,0},{0,0,0,0,0,0,0,0,0},{0,0,0,0,0,0,0,0,0},{1,2,3,4,5,6,7,8,0}};
+        if(mode.equalsIgnoreCase("verr")){
+            for(int i = 0; i < row; i++){
+                for(int j = 0; j < col; j++){
+                    if(this.tokenState[i][j] != null){
+                         System.out.print(this.tokenState[i][j].getColor() + this.tokenState[i][j].getTokenNumber() + " ");                        
+                    }else{
+                        System.out.print("\033[30m" + "- ");
+                    }
+                }
+                System.out.println("");
+            }            
+        }else if(mode.equalsIgnoreCase("vern")){
+            
+            
+        }
+    /*
+        int[][] initGameBoard = {{0,1,2,3,4,5,6,7,8},{0,0,0,0,0,0,0,0,0},{0,0,0,0,0,0,0,0,0},{0,0,0,0,0,0,0,0,0},{0,0,0,0,0,0,0,0,0},{0,0,0,0,0,0,0,0,0},{0,0,0,0,0,0,0,0,0},{0,0,0,0,0,0,0,0,0},{1,2,3,4,5,6,7,8,0}};
         int[][] player = {{0,1,1,1,1,1,1,1,1},{0,0,0,0,0,0,0,0,0},{0,0,0,0,0,0,0,0,0},{0,0,0,0,0,0,0,0,0},{0,0,0,0,0,0,0,0,0},{0,0,0,0,0,0,0,0,0},{0,0,0,0,0,0,0,0,0},{0,0,0,0,0,0,0,0,0},{2,2,2,2,2,2,2,2,0}};
         initGameBoard("verr",initGameBoard,player);
     }
@@ -109,5 +127,31 @@ public class GameBoard {
         
     }
     
+    public void fillMatrix(int[] tokenNumbers){
+        int row = this.tokenState.length;
+        int col = this.tokenState[0].length;
+        int counter = 0;
+        Player currentPlayer;
+        
+        Token currentToken = new Token();
+        
+        for(int i = 0; i < col; i = col - 1){
+            currentPlayer = listOfPlayers.get(counter);
+            
+            for (int j = 1; j < col; j++) {
+                if(i==0){
+                    currentToken.setPlayer(currentPlayer);
+                    currentToken.setTokenNumber(tokenNumbers[j]);
+                    currentToken.setColor("\\033[34m");
+                }else{
+                    currentToken.setPlayer(currentPlayer);
+                    currentToken.setTokenNumber(tokenNumbers[col - j]);
+                    currentToken.setColor("\033[31m");
+                }
+                this.tokenState[i][j] = currentToken;
+            }
+            counter++;
+        }
+    }
 }
 

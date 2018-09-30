@@ -11,7 +11,7 @@ import java.util.HashMap;
  * @author Felipe Najson and Marco Fiorito
  */
 public class Match implements Comparable{
-    private HashMap<Player,Integer> players;
+    private ArrayList<Player> players;
     private ArrayList<GameBoard> listOfGameBoard;
     private LocalDateTime date;
     private Player winner;
@@ -22,21 +22,21 @@ public class Match implements Comparable{
     static String[] ways = {"movimientos","pieza","piezas"};
     
     public Match(Player player1, Player player2, String wayToFinish, int qtyOfMovements){
-        players = new HashMap<>();
-        this.setPlayer(player1, 1);
-        this.setPlayer(player2, 2);
+        players = new ArrayList<>();
+        this.setPlayer(player1);
+        this.setPlayer(player2);
         listOfGameBoard = new ArrayList<>();   
         this.setDate(LocalDateTime.now());
         this.setWayToFinish(wayToFinish);
         this.setQtyOfMovements(qtyOfMovements);
     }
 
-    public HashMap<Player, Integer> getPlayers() {
+    public ArrayList<Player> getPlayers() {
         return players;
     }
 
-    public void setPlayer(Player player ,int value) {
-        this.getPlayers().put(player, value);
+    public void setPlayer(Player player ) {
+        this.getPlayers().add(player);
     }
 
     public String getWayToFinish() {

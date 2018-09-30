@@ -21,6 +21,9 @@ public class Token {
         this.player = player;
     }
     
+    public Token(){
+        
+    }
  
     public String getColor() {
         return color;
