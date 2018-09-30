@@ -8,22 +8,12 @@ import java.util.ArrayList;
  */
 public class GameBoard {
 
-    private int turn;
     private Token[][] tokenState;
     private ArrayList<Player> listOfPlayers;
 
-    public GameBoard(int turn, ArrayList<Player> listOfPlayers) {
-        this.turn = turn;
+    public GameBoard( ArrayList<Player> listOfPlayers) {
         this.tokenState = new Token[8][9];
         this.listOfPlayers = listOfPlayers;
-    }
-
-    public int getTurn() {
-        return turn;
-    }
-
-    public void setTurn(int turn) {
-        this.turn = turn;
     }
 
     public void drawDefaultGameBoard(String mode) {

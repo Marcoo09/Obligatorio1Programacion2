@@ -22,7 +22,9 @@ public class Token {
     }
     
     public Token(){
-        
+        this.color = "\033[30m" ;
+        this.tokenNumber = 0;
+        this.player = null;
     }
  
     public String getColor() {

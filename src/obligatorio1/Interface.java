@@ -36,7 +36,7 @@ public class Interface {
                        Match match = Interface.beginMatch(game);
                        game.addMatch(match);
                        System.out.println("EMPIEZA EL JUEGO");
-                       gameboard = new GameBoard(0,match.getPlayers());
+                       gameboard = new GameBoard(match.getPlayers());
                        gameboard.drawDefaultGameBoard("vern");
                     }else{
                         System.out.println("Se debe registrar por lo menos dos jugadores");
