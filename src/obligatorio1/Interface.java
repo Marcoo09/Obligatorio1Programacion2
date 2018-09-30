@@ -37,7 +37,7 @@ public class Interface {
                        game.addMatch(match);
                        System.out.println("EMPIEZA EL JUEGO");
                        gameboard = new GameBoard(0,match.getPlayers());
-                       gameboard.drawDefaultGameBoard("verr");
+                       gameboard.drawDefaultGameBoard("vern");
                     }else{
                         System.out.println("Se debe registrar por lo menos dos jugadores");
                     }
@@ -113,24 +113,26 @@ public class Interface {
             System.out.print((i + 1) + " - " + game.getListOfPlayers().get(i));
         }
         while(!firstPlayerIsCorrect){
+            System.out.println("");
             p1 = Interface.askForNumeric("el jugador que tendrá el color azul");
             firstPlayerIsCorrect = Interface.validateAttribute(p1, 1, sizeOfPlayerList);
         }
         player1 = possiblePlayers.get(p1 - 1);
         
         while(!SecondPlayerIsCorrect){
+            System.out.println("");
             p2 = Interface.askForNumeric("el jugador que tendra el color rojo");
             SecondPlayerIsCorrect = Interface.validateAttribute(p2, 1, sizeOfPlayerList );
             if(p1 == p2){
                 SecondPlayerIsCorrect = false;
-                System.out.println("Elige un jugador distinto al 1.");
+                System.out.println("Elige un jugador distinto al 1");
             }
         }
         player2 = possiblePlayers.get(p2 - 1);
         
         System.out.println("Elige una de las siguientes formas de terminar el juego: ");
         for (int i = 0; i < wayToFinishOptions.length; i++) {
-            System.out.println((i + 1) + wayToFinishOptions[i]);
+            System.out.println((i + 1) + " " + wayToFinishOptions[i]);
         }
         while(!wayToFinishValidator){
             chosenOption = Interface.askForNumeric("opción");

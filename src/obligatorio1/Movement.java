@@ -51,8 +51,37 @@ public class Movement {
     }
 
     /**/
-    public void sumOfDiagonalsAndEdges(){
+    public void sumOfDiagonalsAndEdges(){/*
+        Scanner input = new Scanner(System.in);
+        int fil = input.nextInt();
+        int col = input.nextInt();
+        int cantF = input.nextInt();
+        int cantCol = input.nextInt();
+        int [][] arr = new int [cantF][cantCol];
         
+        for(int i = 0; i< cantF; i++){
+            for(int j = 0; j< cantCol; j++){
+                arr[i][j] = input.nextInt();
+            }
+        }
+        boolean repetido = false;
+        int iToCompare = arr[fil][col];
+        int auxValue = 1, derAr, derAb,izAr,izAb,restaFil,sumaCol,restaCol,sumaFil;
+        while(!repetido && (auxValue < Math.max(cantCol, cantF))){
+            restaFil = fil - auxValue;
+            sumaCol = col + auxValue; 
+            sumaFil = fil + auxValue; 
+            restaCol = col - auxValue;
+            derAr = restaFil >= 0 && sumaCol < cantCol?arr[restaFil][sumaCol]:0;
+            derAb = sumaFil < cantF && sumaCol < cantCol?arr[sumaFil][sumaCol]:0;
+            izAr = restaFil >= 0 && restaCol >= 0?arr[restaFil][restaCol]:0;
+            izAb = sumaFil < cantF && restaCol >= 0 ?arr[sumaFil][restaCol]:0;
+            repetido = iToCompare == derAr || iToCompare == derAb || iToCompare == izAb || iToCompare == izAr?true:false;
+            auxValue ++;
+        }
+        String output = repetido?"REPETIDO":"UNICO";
+        System.out.println(output);
+    */
     }
     
     public Boolean validMovement(){

@@ -56,7 +56,7 @@ public class Player {
 
     @Override
     public String toString() {
-        return "Nombre: " + this.getName() + "\nNickName: " + this.getNickName() + "\nEdad: " + this.getNickName() + "\nPartidas ganadas" + this.getWonGames();
+        return "\n•Nombre: " + this.getName() + "\n•NickName: " + this.getNickName() + "\n•Edad: " + this.getNickName() + "\n•Partidas ganadas " + this.getWonGames() + "\n";
     }
     
 }
