@@ -18,7 +18,6 @@ public class Match implements Comparable{
     private int remainingPlays;
     private String wayToFinish;
     private int qtyOfMovements = 0;
-    //iodsaojdsaiodiosadjoidsajoisdajiodsa
     
     static String[] ways = {"movimientos","pieza","piezas"};
     
