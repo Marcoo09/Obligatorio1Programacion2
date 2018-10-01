@@ -53,6 +53,11 @@ public class Player {
     public void setWonGames(int wonGames) {
         this.wonGames = wonGames;
     }
+    
+    @Override
+    public boolean equals(Object o){
+       return this.getNickName().equals(((Player)o).getNickName());
+    }
 
     @Override
     public String toString() {

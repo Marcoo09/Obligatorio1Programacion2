@@ -16,6 +16,17 @@ public class GameBoard {
         this.listOfPlayers = listOfPlayers;
     }
 
+    public Token[][] getTokenState() {
+        return tokenState;
+    }
+
+    public void setTokenState(Token[][] tokenState) {
+        this.tokenState = tokenState;
+    }
+    public Player getPlayerRed(){
+        return this.listOfPlayers.get(1);
+    }
+    
     public void drawDefaultGameBoard(String mode) {
         int row = this.tokenState.length;
         int col = this.tokenState[0].length;
@@ -54,7 +65,7 @@ public class GameBoard {
     }
 
     public void drawCurrentGameBoard() {
-
+        
     }
 
     public void fillMatrix(int[] tokenNumbers) {

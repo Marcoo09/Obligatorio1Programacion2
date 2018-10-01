@@ -12,17 +12,17 @@ public class Interface {
     public static void main(String[] args) {
         Game game = new Game();
         GameBoard gameboard;
-        
-        String[] menuOptions = {"Registrar jugador", "Jugar Partida", "Replicar Partida","Ranking", "Salir"};
+
+        String[] menuOptions = {"Registrar jugador", "Jugar Partida", "Replicar Partida", "Ranking", "Salir"};
         boolean executeProgram = true;
-        
-       System.out.println("..:: Bienvenido al juego Sumas ::..");
-            
-        while(executeProgram){
+
+        System.out.println("..:: Bienvenido al juego Sumas ::..");
+
+        while (executeProgram) {
             System.out.println("\n<--------INGRESE UNA DE LAS SIGUIENTES OPCIONES DEL MENÚ(NÚMERO)-------->\n");
             for (int i = 0; i < menuOptions.length; i++) {
                 int value = i + 97;
-                System.out.println((char)value + " - " + menuOptions[i]);
+                System.out.println((char) value + " - " + menuOptions[i]);
             }
             String entry = Interface.askForString("opción").toLowerCase();
             switch (entry) {
@@ -32,13 +32,16 @@ public class Interface {
                     System.out.println("JUGADOR REGISTRADO");
                     break;
                 case "b":
-                    if(game.getListOfPlayers().size() > 1){
-                       Match match = Interface.beginMatch(game);
-                       game.addMatch(match);
-                       System.out.println("EMPIEZA EL JUEGO");
-                       gameboard = new GameBoard(match.getPlayers());
-                       gameboard.drawDefaultGameBoard("vern");
-                    }else{
+                    if (game.getListOfPlayers().size() > 1) {
+                        Match match = Interface.beginMatch(game);
+                        game.addMatch(match);
+                        System.out.println("EMPIEZA EL JUEGO");
+
+                        gameboard = new GameBoard(match.getPlayers());
+                        gameboard.drawDefaultGameBoard("vern");
+                        Interface.drawCurrentGameBoard(gameboard);
+
+                    } else {
                         System.out.println("Se debe registrar por lo menos dos jugadores");
                     }
                     break;
@@ -61,13 +64,13 @@ public class Interface {
         }
 
     }
-    
-    public static Player addPlayer(){        
+
+    public static Player addPlayer() {
         //Variables of Player
         String name;
         String nickName;
         int age = 0;
-        
+
         //Variables used in validators
         boolean ageValidator = false;
         //Scanner used in error handling
@@ -84,17 +87,17 @@ public class Interface {
         }
 
         //return the new object Player
-        return new Player(name,nickName,age);
-    
+        return new Player(name, nickName, age);
+
     }
-    
-    public static Match beginMatch(Game game){
+
+    public static Match beginMatch(Game game) {
         //Variable used in validators
         boolean firstPlayerIsCorrect = false;
-        boolean SecondPlayerIsCorrect = false; 
+        boolean SecondPlayerIsCorrect = false;
         boolean wayToFinishValidator = false;
         boolean qtyOfMovementsValidator = false;
-        
+
         int p1 = 0;
         int p2 = 0;
         int chosenOption = 0;
@@ -105,59 +108,59 @@ public class Interface {
         String wayToFinish;
         int qtyOfMovements = 0;
         ArrayList<Player> possiblePlayers = game.getListOfPlayers();
-        
+
         int sizeOfPlayerList = possiblePlayers.size();
-        
+
         System.out.println("Elige los jugadores");
-        for (int i = 0; i < sizeOfPlayerList ; i++) {
+        for (int i = 0; i < sizeOfPlayerList; i++) {
             System.out.print((i + 1) + " - " + game.getListOfPlayers().get(i));
         }
-        while(!firstPlayerIsCorrect){
+        while (!firstPlayerIsCorrect) {
             System.out.println("");
             p1 = Interface.askForNumeric("el jugador que tendrá el color azul");
             firstPlayerIsCorrect = Interface.validateAttribute(p1, 1, sizeOfPlayerList);
         }
         player1 = possiblePlayers.get(p1 - 1);
-        
-        while(!SecondPlayerIsCorrect){
+
+        while (!SecondPlayerIsCorrect) {
             System.out.println("");
             p2 = Interface.askForNumeric("el jugador que tendra el color rojo");
-            SecondPlayerIsCorrect = Interface.validateAttribute(p2, 1, sizeOfPlayerList );
-            if(p1 == p2){
+            SecondPlayerIsCorrect = Interface.validateAttribute(p2, 1, sizeOfPlayerList);
+            if (p1 == p2) {
                 SecondPlayerIsCorrect = false;
                 System.out.println("Elige un jugador distinto al 1");
             }
         }
         player2 = possiblePlayers.get(p2 - 1);
-        
+
         System.out.println("Elige una de las siguientes formas de terminar el juego: ");
         for (int i = 0; i < wayToFinishOptions.length; i++) {
             System.out.println((i + 1) + " " + wayToFinishOptions[i]);
         }
-        while(!wayToFinishValidator){
+        while (!wayToFinishValidator) {
             chosenOption = Interface.askForNumeric("opción");
             wayToFinishValidator = validateAttribute(chosenOption, 1, 3);
         }
-        if(chosenOption == 1){
-            while(!qtyOfMovementsValidator){
+        if (chosenOption == 1) {
+            while (!qtyOfMovementsValidator) {
                 qtyOfMovements = Interface.askForNumeric("cantidad movimientos que desea.");
                 qtyOfMovementsValidator = Interface.validateAttribute(qtyOfMovements, 0, Integer.MAX_VALUE);
             }
         }
-        
-        return new Match(player1,player2, Match.ways[chosenOption - 1],qtyOfMovements);
+
+        return new Match(player1, player2, Match.ways[chosenOption - 1], qtyOfMovements);
     }
-    
+
     //Range Validator
     public static boolean validateAttribute(int numberToValidate, int intialRange, int finalRange) {
         //Check if the first parameter is between the range
         boolean returnValue = (numberToValidate >= intialRange && numberToValidate <= finalRange);
-        if(!returnValue){
+        if (!returnValue) {
             System.out.println("Ingrese un valor entre " + intialRange + " - " + finalRange);
         }
         return returnValue;
     }
-    
+
     //This method ask for a String and return the value
     public static String askForString(String whatToAsk) {
         Scanner inputString = new Scanner(System.in);
@@ -189,39 +192,90 @@ public class Interface {
         return ret;
     }
 
-    public static void replayMatch(Game game){
+    public static void replayMatch(Game game) {
         boolean indexOfMatchValidator = false;
         boolean exitValidator = false;
         int chosenOption = 0;
         String entry = "";
-        
+
         Scanner input = new Scanner(System.in);
-        
+
         ArrayList<Match> listOfMatches = game.getListOfMatches();
         game.sortMatchesByDateTime();
-        
+
         System.out.println("Elige una de las siguientes partidas para repetir:\n");
         for (int i = 0; i < listOfMatches.size(); i++) {
             Match currentMatch = listOfMatches.get(i);
             System.out.println("Partida " + (i + 1) + ": " + currentMatch.getDateTime());
         }
-        while(!indexOfMatchValidator){
+        while (!indexOfMatchValidator) {
             chosenOption = Interface.askForNumeric("partida");
             indexOfMatchValidator = Interface.validateAttribute(chosenOption, 1, listOfMatches.size());
         }
         Match selectedMatch = listOfMatches.get(chosenOption - 1);
         ArrayList<GameBoard> listOfGameBoards = selectedMatch.getListOfGameBoard();
-        
+
         System.out.println("Presione n para avanzar de jugada o s para salir");
         for (int i = 0; i < listOfGameBoards.size() && !exitValidator; i++) {
             entry = "";
             listOfGameBoards.get(i).drawCurrentGameBoard();
-            while(!entry.equals("n") && !exitValidator){
+            while (!entry.equals("n") && !exitValidator) {
                 entry = input.nextLine();
                 exitValidator = entry.equals("s");
 
             }
         }
-       
+
+    }
+
+    public static void drawCurrentGameBoard(GameBoard gameboard) {
+        Scanner in = new Scanner(System.in);
+        Token[][] gameBoard = gameboard.getTokenState();
+        int x = 0;
+        int y = 0;
+
+        System.out.println("COMIENZA EL JUGADOR AZUL");
+        System.out.println("\nELIGA PRIMERA PIEZA A MOVER");
+        int piezaAuxiliar = in.nextInt();
+        for (int i = 0; i < gameboard.getTokenState().length; i++) {
+            System.out.println("entro");
+            for (int j = 0; j < gameboard.getTokenState()[0].length; j++) {
+                if (gameBoard[i][j] != null) {
+                    if (gameBoard[i][j].getTokenNumber() == piezaAuxiliar && gameBoard[i][j].getPlayer() == gameboard.getPlayerRed()) {
+                        x = j;
+                        y = i;
+                    }
+                }
+
+            }
+        }
+        System.out.println("\n(D)DERECHA (I)IZQUIERA (A)ADELANTE");
+        String movimiento = Interface.askForString("Movimiento");
+
+        if ("D".equalsIgnoreCase(movimiento)) {
+            System.out.println("D");
+            gameBoard[y - 1][x + 1] = gameBoard[y][x];
+        }
+        if ("I".equals(movimiento)) {
+            System.out.println("I");
+            gameBoard[y - 1][x - 1] = gameBoard[y][x];
+        }
+        if ("A".equals(movimiento)) {
+            System.out.println("A");
+            gameBoard[y - 1][x] = gameBoard[y][x];
+        }
+
+        System.out.println("Salio 2");
+        for (int i = 0; i < gameboard.getTokenState().length; i++) {
+            for (int j = 0; j < gameboard.getTokenState()[0].length; j++) {
+                if (gameBoard[i][j] == null) {
+                    System.out.print("-");
+                } else {
+                    System.out.print(gameBoard[i][j].getTokenNumber());
+                }
+            }
+            System.out.println("");
+        }
+
     }
 }

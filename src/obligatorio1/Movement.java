@@ -1,6 +1,7 @@
 package obligatorio1;
 
 import java.util.ArrayList;
+import java.util.Scanner;
 
 /*
  * @author Felipe Najson and Marco Fiorito
@@ -50,8 +51,74 @@ public class Movement {
         this.possibleMovements = possibleMovements;
     }
 
-    /**/
-    public void sumOfDiagonalsAndEdges(){/*
+    public int[] sumOfDiagonalsAndEdges(Token aToken){
+        Token[][]tokenMatrix = this.currentGameBoard.getTokenState();
+        int initialValue = aToken.getTokenNumber();
+        int[] sum = new int [4];
+        for (int i = 0; i < 4; i++) {
+            sum[i]=initialValue;
+        }
+        
+        //Punto inicial primera diagonal
+        int x = this.getTokenPositionX();
+        int y = this.getTokenPositionY();
+        //Primera diagonal
+        while(y!=0 && x!=0){
+            y--;
+            x--;
+            if(tokenMatrix[x][y]!=null){
+                sum[0]= tokenMatrix[x][y].getTokenNumber();
+            }
+           
+        }
+        x = this.getTokenPositionX();
+        y = this.getTokenPositionY();
+        
+        while(y!= tokenMatrix.length-1 && x!=0){
+            y++;
+            x--;
+            if(tokenMatrix[x][y]!=null){
+                sum[0]+= tokenMatrix[x][y].getTokenNumber();
+            }
+        }
+        
+        x = this.getTokenPositionX();
+        y = this.getTokenPositionY();
+        
+        //2da
+        while(y!=0 && x!=tokenMatrix[0].length-1){
+            y--;
+            x++;
+            if(tokenMatrix[x][y]!=null){
+                sum[1]+= tokenMatrix[x][y].getTokenNumber();
+            }
+        }
+        x = this.getTokenPositionX();
+        y = this.getTokenPositionY();
+        while(y!= tokenMatrix.length-1 && x!= tokenMatrix[0].length-1){
+            y++;
+            x++;
+            if(tokenMatrix[x][y]!=null){
+                sum[1]+= tokenMatrix[x][y].getTokenNumber();
+            }
+        }
+        
+        x = this.getTokenPositionX();
+        y = this.getTokenPositionY();
+        for (int i = 0; i < tokenMatrix.length; i++) {
+            if (tokenMatrix[i][x]!=null && i!=y) {
+                sum[3]+=tokenMatrix[i][x].getTokenNumber();
+            }
+        }
+        for (int j = 0; j < tokenMatrix[0].length; j++) {
+                if(tokenMatrix[y][j]!=null && j!=x){
+                    sum[4]+=tokenMatrix[y][j].getTokenNumber();
+                }
+            }
+        return sum;
+        
+            /**/
+   /*
         Scanner input = new Scanner(System.in);
         int fil = input.nextInt();
         int col = input.nextInt();
@@ -80,9 +147,28 @@ public class Movement {
             auxValue ++;
         }
         String output = repetido?"REPETIDO":"UNICO";
-        System.out.println(output);
-    */
+        */
     }
+    
+    public void searchToken(Token token){
+        Scanner in = new Scanner(System.in);
+        Token[][] gameBoard = this.currentGameBoard.getTokenState();
+        int x = 0;
+        int y = 0;
+
+        for (int i = 0; i < gameBoard.length; i++) {
+            for (int j = 0; j < gameBoard[0].length; j++) {
+                if (gameBoard[i][j] != null) {
+                    if (gameBoard[i][j].getTokenNumber() == token.getTokenNumber() && gameBoard[i][j].getPlayer() == token.getPlayer()) {
+                        x = j;
+                        y = i;
+                    }
+                }
+            }
+        }
+        this.setTokenPositionX(x);
+        this.setTokenPositionY(y);
+    } 
     
     public Boolean validMovement(){
         return true;

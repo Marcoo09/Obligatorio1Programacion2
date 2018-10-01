@@ -25,6 +25,7 @@ public class Match implements Comparable{
         players = new ArrayList<>();
         this.setPlayer(player1);
         this.setPlayer(player2);
+        
         listOfGameBoard = new ArrayList<>();   
         this.setDate(LocalDateTime.now());
         this.setWayToFinish(wayToFinish);
