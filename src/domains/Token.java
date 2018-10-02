@@ -1,12 +1,6 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-package obligatorio1;
+package domains;
 
 /**
- *
  * @author Marco Fiorito and Felipe Najson
  */
 
@@ -22,7 +16,7 @@ public class Token {
     }
     
     public Token(){
-        this.color = "\033[30m" ;
+        this.color = "\033[30m";
         this.tokenNumber = 0;
         this.player = null;
     }

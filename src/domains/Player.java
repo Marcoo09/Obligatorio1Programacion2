@@ -1,4 +1,4 @@
-package obligatorio1;
+package domains;
 
 /*
  * @author Felipe Najson and Marco Fiorito

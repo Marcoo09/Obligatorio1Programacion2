@@ -1,13 +1,12 @@
-
-package obligatorio1;
+package domains;
 
 import java.util.ArrayList;
 import java.util.Collections;
 
 /**
- *
  * @author Felipe Najson and Marco Fiorito
  */
+
 public class Game {
     private ArrayList<Match> listOfMatches;
     private ArrayList<Player> listOfPlayers;

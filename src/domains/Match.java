@@ -1,5 +1,4 @@
-
-package obligatorio1;
+package domains;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -7,37 +6,36 @@ import java.util.Date;
 import java.util.HashMap;
 
 /**
- *
  * @author Felipe Najson and Marco Fiorito
  */
 public class Match implements Comparable{
-    private ArrayList<Player> players;
-    private ArrayList<GameBoard> listOfGameBoard;
+    private ArrayList<Player> listOfPlayers;
+    private ArrayList<GameBoard> listOfGameBoards;
     private LocalDateTime date;
     private Player winner;
     private int remainingPlays;
     private String wayToFinish;
     private int qtyOfMovements = 0;
     
-    static String[] ways = {"movimientos","pieza","piezas"};
+    public static String[] ways = {"movimientos","pieza","piezas"};
     
     public Match(Player player1, Player player2, String wayToFinish, int qtyOfMovements){
-        players = new ArrayList<>();
+        listOfPlayers = new ArrayList<>();
         this.setPlayer(player1);
         this.setPlayer(player2);
         
-        listOfGameBoard = new ArrayList<>();   
+        listOfGameBoards = new ArrayList<>();   
         this.setDate(LocalDateTime.now());
         this.setWayToFinish(wayToFinish);
         this.setQtyOfMovements(qtyOfMovements);
     }
 
-    public ArrayList<Player> getPlayers() {
-        return players;
+    public ArrayList<Player> getListOfPlayers() {
+        return listOfPlayers;
     }
 
     public void setPlayer(Player player ) {
-        this.getPlayers().add(player);
+        this.getListOfPlayers().add(player);
     }
 
     public String getWayToFinish() {
@@ -80,7 +78,7 @@ public class Match implements Comparable{
     }
     
     public ArrayList<GameBoard> getListOfGameBoard() {
-        return listOfGameBoard;
+        return listOfGameBoards;
     }
 
     @Override
