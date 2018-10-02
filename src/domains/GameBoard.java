@@ -24,7 +24,10 @@ public class GameBoard {
     }
     public Player getPlayerRed(){
         return this.listOfPlayers.get(1);
-    }   
+    }  
+    public Player getPlayerBlue(){
+        return this.listOfPlayers.get(1);
+    }  
 
     public void fillInitialMatrix(int[] tokenNumbers) {
         int row = this.tokenMatrix.length;
