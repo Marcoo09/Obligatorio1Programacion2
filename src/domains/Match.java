@@ -92,9 +92,9 @@ public class Match implements Comparable {
         int qtyOfBlues = 0;
 
         GameBoard lastGameBoard = this.getListOfGameBoard().get(this.getListOfGameBoard().size() - 1);
-        Token[][] lastMatrix = this.getListOfGameBoard().get(this.getListOfGameBoard().size() - 1).getTokenMatrix();
+        Token[][] lastMatrix = lastGameBoard.getTokenMatrix();
         
-        //Caso 1
+        //Case 1
         if (wayToFinalize.equals("movimientos")) {
             int qtyOfMovements = this.getQtyOfMovements();
             this.setQtyOfMovements(qtyOfMovements - 1);
@@ -112,14 +112,16 @@ public class Match implements Comparable {
                     }
                 }
                 //Eligo el ganador
-                if (qtyOfReds>=qtyOfBlues) {
+                if (qtyOfReds > qtyOfBlues) {
                     this.setWinner(lastGameBoard.getPlayerRed());
-                }else {
+                }else if(qtyOfReds < qtyOfBlues){
                     this.setWinner(lastGameBoard.getPlayerBlue());
+                }else{
+                    this.setWinner(null);
                 }
                 returnedValue = true;
             }
-        //Caso 2    
+        //Case 2    
         } else if (wayToFinalize.equals("pieza")) {
             for (int i = 0; i < 9 && !returnedValue; i++) {
                 if (lastMatrix[0][i] != null && lastMatrix[0][i].getPlayer().equals(lastGameBoard.getPlayerRed())) {
@@ -131,8 +133,8 @@ public class Match implements Comparable {
                     this.setWinner(lastGameBoard.getPlayerBlue());
                 }
             }
+        //Case 3
         } else {
-            //Caso 3
             
             //Recorro primera fila, verifico que sean todos rojos
             for (int i = 0; i < 9 && allReds; i++) {
@@ -158,6 +160,9 @@ public class Match implements Comparable {
                     returnedValue = true;
                     this.setWinner(lastGameBoard.getPlayerBlue());
                 }
+            }
+            if(!(allBlues || allReds)){
+                this.setWinner(null);
             }
         }
         return returnedValue;
