@@ -82,7 +82,11 @@ public class Match implements Comparable {
     public ArrayList<GameBoard> getListOfGameBoard() {
         return listOfGameBoards;
     }
-
+    
+    public void setGameBoard(GameBoard gameboard){
+        this.getListOfGameBoard().add(gameboard);
+    }
+    
     public boolean isFinished() {
         String wayToFinalize = this.getWayToFinish();
         boolean returnedValue = false;

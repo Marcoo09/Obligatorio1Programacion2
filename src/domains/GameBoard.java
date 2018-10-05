@@ -9,7 +9,9 @@ public class GameBoard {
 
     private Token[][] tokenMatrix;
     private ArrayList<Player> listOfPlayers;
-
+    
+    public static String[] posibleDirectionsMovements = {"I","A","D"}; 
+    
     public GameBoard( ArrayList<Player> listOfPlayers) {
         this.tokenMatrix = new Token[8][9];
         this.listOfPlayers = listOfPlayers;

@@ -14,11 +14,9 @@ public class Movement {
     private GameBoard currentGameBoard;
     private ArrayList<Integer> possibleMovements;
 
-    public Movement(int tokenPositionX, int tokenPositionY, GameBoard currentGameBoard, ArrayList<Integer> possibleMovements) {
-        this.tokenPositionX = tokenPositionX;
-        this.tokenPositionY = tokenPositionY;
+    public Movement(GameBoard currentGameBoard) {
         this.currentGameBoard = currentGameBoard;
-        this.possibleMovements = possibleMovements;
+        this.possibleMovements = new  ArrayList<>();
     }
 
     /*Getter and Setter of position*/
@@ -147,7 +145,17 @@ public class Movement {
         this.setTokenPositionY(positionY);
     }
 
-    public Boolean validMovement(Token parmToken, int positionX, int positionY) {
+    public Boolean validBluePlayerMovement(Token parmToken, int positionX, int positionY) {
+        
+        //El problema aca es si realmente es necesario realizar este metodo de esta forma
+        //Validar un movimiento puede ser simplemente evaluar si no hay una ficha nuestra o del rival adelante
+        //además de evaluar si no se sale del tablero
+        //
+        
+        return true;
+    }
+    
+    public Boolean validRedPlayerMovement(Token parmToken, int positionX, int positionY) {
         
         //El problema aca es si realmente es necesario realizar este metodo de esta forma
         //Validar un movimiento puede ser simplemente evaluar si no hay una ficha nuestra o del rival adelante

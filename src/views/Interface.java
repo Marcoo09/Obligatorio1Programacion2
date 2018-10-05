@@ -6,6 +6,7 @@ import java.util.Scanner;
 import domains.Game;
 import domains.GameBoard;
 import domains.Match;
+import domains.Movement;
 import domains.Player;
 import domains.Token;
 
@@ -47,8 +48,11 @@ public class Interface {
                     
                     String mode = Interface.askForMode();
                     
-                    Interface.drawDefaultGameBoard(gameboard, mode);
-
+                    Interface.drawDefaultGameBoard(gameboard, mode, match);
+                    
+                    Interface.turnByTurn(game,match,gameboard);
+                    
+                    Interface.anounceWinner(match);
                 } else {
                     System.out.println("Debes registrar por lo menos dos jugadores");
                 }
@@ -107,6 +111,15 @@ public class Interface {
         return new Player(name, nickName, age);
 
     }
+    
+    public static void anounceWinner(Match match) {
+        Player playerWinner = match.getWinner();
+        playerWinner.setWonGames(playerWinner.getWonGames() + 1);
+        
+        System.out.println("El jugador que ha ganado es: \n");
+        System.out.println(playerWinner);
+    }
+
 
     public static Match beginMatch(Game game) {
         //Variable used in validators
@@ -171,13 +184,81 @@ public class Interface {
         return new Match(player1, player2, Match.ways[chosenOption - 1], qtyOfMovements);
     }
 
-    public static void drawDefaultGameBoard(GameBoard gameboard, String mode) {
+    
+    public static void turnByTurn(Game game, Match match, GameBoard gameboard) {
+        Movement movement = new Movement(gameboard);
+        
+        boolean isFinished = false;
+        
+        while(!isFinished){
+            
+            Interface.turnRed(game, match, gameboard);
+            
+            Interface.turnBlue(game, match, gameboard);
+            
+            isFinished = match.isFinished();
+        }
+        
+    }
+    
+    public static void turnRed(Game game, Match match, GameBoard gameboard) {
+        boolean isTurnRed = true;
+        
+        while(isTurnRed){
+            
+        }        
+    }
+
+    public static void turnBlue(Game game, Match match, GameBoard gameboard) {
+        Scanner input = new Scanner(System.in);
+       
+        boolean isTurnBlue = true;
+        boolean validInputMovement = false;
+        boolean validMovement;
+        String allDataAboutMovement;
+        int tokenToMove = 0;
+        String movementDirection;
+        
+        while(isTurnBlue){
+            while(!validInputMovement){
+                allDataAboutMovement = Interface.askForString("una ficha acompañada del movimiento que deseas");
+                allDataAboutMovement.trim();
+                try{
+                    tokenToMove = allDataAboutMovement.charAt(0);
+                    movementDirection = Character.toString(allDataAboutMovement.charAt(1));
+                    
+                   /* if((tokenToMove)){
+                        //Me quede aca
+                    }*/
+                } catch (InputMismatchException e) {
+                    if (e.toString().equals("java.util.InputMismatchException")) {
+                        System.out.println("Debes ingresar un número");
+                    } else {
+                        System.out.println("Debes ingresar un número más corto");
+                    }
+                    validInputMovement = false;
+                    input.next();
+                }
+            }
+            
+        }
+    }
+    
+    public static void showPosibleDirectionsMovements(){
+        for (int i = 0; i < 10; i++) {
+            
+        }
+    }
+    
+    public static void drawDefaultGameBoard(GameBoard gameboard, String mode, Match match) {
         Token tokenMatrix[][] = gameboard.getTokenMatrix();
         int row = tokenMatrix.length;
         int col = tokenMatrix[0].length;
         int[] tokens = {0, 1, 2, 3, 4, 5, 6, 7, 8};
+        
         gameboard.fillInitialMatrix(tokens);
-
+        match.setGameBoard(gameboard);
+        
         if (mode.equals("verr")) {
             for (int i = 0; i < row; i++) {
                 for (int j = 0; j < col; j++) {
