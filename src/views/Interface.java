@@ -9,6 +9,7 @@ import domains.Match;
 import domains.Movement;
 import domains.Player;
 import domains.Token;
+import java.util.Arrays;
 
 /**
  * @author Marco Fiorito and Felipe Najson
@@ -202,11 +203,48 @@ public class Interface {
     }
     
     public static void turnRed(Game game, Match match, GameBoard gameboard) {
+        Scanner input = new Scanner(System.in);
+       
         boolean isTurnRed = true;
+        boolean validInputMovement = false;
+        boolean validMovement;
+        ArrayList<Integer> posibleTokenMovements = new ArrayList<>(Arrays.asList(1,2,3,4,5,6,7,8));
+        
+        String allDataAboutMovement;
+        int tokenToMove = 0;
+        String movementDirection;
         
         while(isTurnRed){
+            System.out.println("Posibles movimientos");
+            Interface.showPosibleDirectionsMovements(posibleTokenMovements);
+            System.out.println("\n(D)DERECHA (I)IZQUIERA (A)ADELANTE \n");
+            while(!validInputMovement){
+
+                allDataAboutMovement = Interface.askForString("una ficha acompañada del movimiento que deseas");
+                allDataAboutMovement.trim();
+                if(allDataAboutMovement.length() == 2){
+                    try{
+                        tokenToMove = allDataAboutMovement.charAt(0);
+                        movementDirection = Character.toString(allDataAboutMovement.charAt(1));
+
+                        if(Interface.validateAttribute(tokenToMove, 1, 8) && Interface.validMovementDirectionInput(movementDirection)){
+                            //Hay que hacer la valdiación de movimiento
+                            Interface.drawCurrentGameBoard(gameboard);
+                        }
+                    } catch (InputMismatchException e) {
+                        if (e.toString().equals("java.util.InputMismatchException")) {
+                            System.out.println("Debes ingresar un número");
+                        } else {
+                            System.out.println("Debes ingresar un número más corto");
+                        }
+                        validInputMovement = false;
+                        input.next();
+                    }
+                }
+
+            }
             
-        }        
+        }  
     }
 
     public static void turnBlue(Game game, Match match, GameBoard gameboard) {
@@ -215,37 +253,41 @@ public class Interface {
         boolean isTurnBlue = true;
         boolean validInputMovement = false;
         boolean validMovement;
+        ArrayList<Integer> posibleTokenMovements = new ArrayList<>(Arrays.asList(1,2,3,4,5,6,7,8));
+        
         String allDataAboutMovement;
         int tokenToMove = 0;
         String movementDirection;
         
         while(isTurnBlue){
+            System.out.println("Posibles movimientos");
+            Interface.showPosibleDirectionsMovements(posibleTokenMovements);
+            System.out.println("\n(D)DERECHA (I)IZQUIERA (A)ADELANTE \n");
             while(!validInputMovement){
+
                 allDataAboutMovement = Interface.askForString("una ficha acompañada del movimiento que deseas");
                 allDataAboutMovement.trim();
-                try{
-                    tokenToMove = allDataAboutMovement.charAt(0);
-                    movementDirection = Character.toString(allDataAboutMovement.charAt(1));
-                    
-                   /* if((tokenToMove)){
-                        //Me quede aca
-                    }*/
-                } catch (InputMismatchException e) {
-                    if (e.toString().equals("java.util.InputMismatchException")) {
-                        System.out.println("Debes ingresar un número");
-                    } else {
-                        System.out.println("Debes ingresar un número más corto");
+                if(allDataAboutMovement.length() == 2){
+                    try{
+                        tokenToMove = allDataAboutMovement.charAt(0);
+                        movementDirection = Character.toString(allDataAboutMovement.charAt(1));
+
+                        if(Interface.validateAttribute(tokenToMove, 1, 8) && Interface.validMovementDirectionInput(movementDirection)){
+                            //Hay que hacer la valdiación de movimiento
+                            Interface.drawCurrentGameBoard(gameboard);
+                        }
+                    } catch (InputMismatchException e) {
+                        if (e.toString().equals("java.util.InputMismatchException")) {
+                            System.out.println("Debes ingresar un número");
+                        } else {
+                            System.out.println("Debes ingresar un número más corto");
+                        }
+                        validInputMovement = false;
+                        input.next();
                     }
-                    validInputMovement = false;
-                    input.next();
                 }
+
             }
-            
-        }
-    }
-    
-    public static void showPosibleDirectionsMovements(){
-        for (int i = 0; i < 10; i++) {
             
         }
     }
@@ -291,6 +333,9 @@ public class Interface {
     }
     
     public static void drawCurrentGameBoard(GameBoard gameboard) {
+        
+        //Hay que rescribirlo
+        
         Scanner in = new Scanner(System.in);
         Token[][] gameBoard = gameboard.getTokenMatrix();
         int x = 0;
@@ -377,6 +422,8 @@ public class Interface {
 
     }
  
+    /*Utils used above*/
+    
     //This method ask for a String and return the value
     public static String askForString(String whatToAsk) {
         Scanner inputString = new Scanner(System.in);
@@ -431,5 +478,22 @@ public class Interface {
             System.out.println("Ingrese un valor entre " + intialRange + " - " + finalRange);
         }
         return returnValue;
+    }
+    
+    public static boolean validMovementDirectionInput(String inputMovement){
+        boolean isValidMovement = false;
+        for (int i = 0; i < GameBoard.posibleDirectionsMovements.length; i++) {
+            String currentValue = GameBoard.posibleDirectionsMovements[i];
+            if(inputMovement.equals(currentValue)){
+                isValidMovement = true;
+            }
+        }
+        return isValidMovement;
+    }
+    
+    public static void showPosibleDirectionsMovements(ArrayList<Integer> posibleTokenMovents){
+        for (int i = 0; i < posibleTokenMovents.size(); i++) {
+            System.out.print(posibleTokenMovents.get(i) + " - " );
+        }
     }
 }
