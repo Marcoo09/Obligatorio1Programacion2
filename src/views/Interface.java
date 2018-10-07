@@ -215,7 +215,7 @@ public class Interface {
         String movementDirection;
         
         while(isTurnRed){
-            System.out.println("Posibles movimientos");
+            System.out.println("Posibles movimientos:");
             Interface.showPosibleDirectionsMovements(posibleTokenMovements);
             System.out.println("\n(D)DERECHA (I)IZQUIERA (A)ADELANTE \n");
             while(!validInputMovement){
@@ -240,6 +240,8 @@ public class Interface {
                         validInputMovement = false;
                         input.next();
                     }
+                }else{
+                    System.out.println("Ingrese un valor correcto");
                 }
 
             }
@@ -260,7 +262,7 @@ public class Interface {
         String movementDirection;
         
         while(isTurnBlue){
-            System.out.println("Posibles movimientos");
+            System.out.println("Posibles movimientos:");
             Interface.showPosibleDirectionsMovements(posibleTokenMovements);
             System.out.println("\n(D)DERECHA (I)IZQUIERA (A)ADELANTE \n");
             while(!validInputMovement){
@@ -462,7 +464,7 @@ public class Interface {
         while(!isCorrect){
             ret = Interface.askForString("modo a ver el tablero");
             ret.toLowerCase();
-            if(ret == "verr" || ret == "vern"){
+            if(ret.equalsIgnoreCase("verr") || ret.equalsIgnoreCase("vern")){
                 isCorrect = true;
             }
         }
@@ -484,7 +486,7 @@ public class Interface {
         boolean isValidMovement = false;
         for (int i = 0; i < GameBoard.posibleDirectionsMovements.length; i++) {
             String currentValue = GameBoard.posibleDirectionsMovements[i];
-            if(inputMovement.equals(currentValue)){
+            if(inputMovement.equalsIgnoreCase(currentValue)){
                 isValidMovement = true;
             }
         }
