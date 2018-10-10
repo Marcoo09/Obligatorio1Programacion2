@@ -103,19 +103,19 @@ public class Match implements Comparable {
             int qtyOfMovements = this.getQtyOfMovements();
             this.setQtyOfMovements(qtyOfMovements - 1);
             if (qtyOfMovements == 0) {
-            //Al llegar el contador a cero, me fijo cual tiene mas fichas del otro lado
+            //Verify what player have more token in the other side
                 for (int i = 0; i < 9; i++) {
                     if (lastMatrix[0][i] != null && lastMatrix[0][i].getPlayer().equals(lastGameBoard.getPlayerRed())) {
                         qtyOfReds++;
                     }
                 }
-                //Recorro ultima fila, verifico que sean todos azules
+                //Verify if all are blue 
                 for (int i = 0; i < 9 && allBlues; i++) {
                     if (lastMatrix[7][i] != null && lastMatrix[7][i].getPlayer().equals(lastGameBoard.getPlayerBlue())) {
                         qtyOfBlues++;
                     }
                 }
-                //Eligo el ganador
+                //Choose the winner
                 if (qtyOfReds > qtyOfBlues) {
                     this.setWinner(lastGameBoard.getPlayerRed());
                 }else if(qtyOfReds < qtyOfBlues){
@@ -140,7 +140,7 @@ public class Match implements Comparable {
         //Case 3
         } else {
             
-            //Recorro primera fila, verifico que sean todos rojos
+            //Verify if all tokens are red
             for (int i = 0; i < 9 && allReds; i++) {
                 if (lastMatrix[0][i] != null && lastMatrix[0][i].getPlayer().equals(lastGameBoard.getPlayerRed())) {
                     allReds = true;
@@ -152,7 +152,7 @@ public class Match implements Comparable {
                     this.setWinner(lastGameBoard.getPlayerRed());
                 }
             }
-            //Recorro ultima fila, verifico que sean todos azules
+            //Verify if all tokens are red
             for (int i = 0; i < 9 && allBlues; i++) {
                 if (lastMatrix[7][i] != null && lastMatrix[7][i].getPlayer().equals(lastGameBoard.getPlayerBlue())) {
                     allBlues = true;

@@ -9,12 +9,30 @@ public class GameBoard {
 
     private Token[][] tokenMatrix;
     private ArrayList<Player> listOfPlayers;
+    private int tokenPositionX;
+    private int tokenPositionY;
     
     public static String[] posibleDirectionsMovements = {"I","A","D"}; 
     
     public GameBoard( ArrayList<Player> listOfPlayers) {
         this.tokenMatrix = new Token[8][9];
         this.listOfPlayers = listOfPlayers;
+    }
+    
+    public int getTokenPositionX() {
+        return tokenPositionX;
+    }
+
+    public void setTokenPositionX(int tokenPositionX) {
+        this.tokenPositionX = tokenPositionX;
+    }
+
+    public int getTokenPositionY() {
+        return tokenPositionY;
+    }
+
+    public void setTokenPositionY(int tokenPositionY) {
+        this.tokenPositionY = tokenPositionY;
     }
 
     public Token[][] getTokenMatrix() {
@@ -57,5 +75,29 @@ public class GameBoard {
             }
             counter++;
         }
+    }
+    
+    public void searchPositionOfToken(int tokenNumber, Player aPlayer) {
+        Token[][] tokenMatrix = this.getTokenMatrix();
+        int positionX = 0;
+        int positionY = 0;
+        boolean founded = false;
+        
+        for (int i = 0; i < tokenMatrix.length && !founded; i++) {
+            for (int j = 0; j < tokenMatrix[0].length && !founded; j++) {
+                Token currentToken = tokenMatrix[i][j];
+                if (currentToken != null) {
+                    if (currentToken.getTokenNumber() == tokenNumber && currentToken.getPlayer().equals(aPlayer) ) {
+                        positionX = j;
+                        positionY = i;
+                        founded = true;
+                    }
+                }
+            }
+        }
+        this.setTokenPositionX(positionX);
+        this.setTokenPositionY(positionY);
+        
+        //return new int[]{positionX, positionY};
     }
 }
