@@ -1,6 +1,7 @@
 package domains;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 /**
  * @author Felipe Najson and Marco Fiorito
@@ -99,5 +100,85 @@ public class GameBoard {
         this.setTokenPositionY(positionY);
         
         //return new int[]{positionX, positionY};
+    }
+    
+    public ArrayList<Integer> sumOfDiagonalsAndEdges(int initialValue, int positionOfTokenX, int positionOfTokenY) {
+        ArrayList<Integer> sum = new ArrayList<>(Arrays.asList(initialValue, initialValue, initialValue, initialValue));
+        //Initial point of diagonal
+        int positionX = positionOfTokenX;
+        int positionY = positionOfTokenY;
+        int tokenNumber= 0;
+        
+        //Primera diagonal
+        while (positionY != 0 && positionX != 0) {
+            positionY--;
+            positionX--;
+            if (tokenMatrix[positionY][positionX] != null) {
+                tokenNumber = tokenMatrix[positionY][positionX].getTokenNumber();
+                sum.add(0, sum.get(0) + tokenNumber);
+            }
+        }
+        tokenNumber= 0;
+
+
+        positionX = positionOfTokenX;
+        positionY = positionOfTokenY;
+
+        while (positionY != tokenMatrix.length - 1 && positionX != tokenMatrix[0].length - 1) {
+            positionY++;
+            positionX++;
+            if (tokenMatrix[positionY][positionX] != null) {
+                tokenNumber = tokenMatrix[positionY][positionX].getTokenNumber();
+                sum.add(0, sum.get(0) + tokenNumber);
+            }
+        }
+
+        positionX = positionOfTokenX;
+        positionY = positionOfTokenY;
+        tokenNumber= 0;
+        //2da
+        while (positionY != 0 && positionX != tokenMatrix[0].length - 1) {
+            positionY--;
+            positionX++;
+            if (tokenMatrix[positionY][positionX] != null) {
+                tokenNumber = tokenMatrix[positionY][positionX].getTokenNumber();
+                sum.add(1, sum.get(1) + tokenNumber);   
+            }
+        }
+        positionX = positionOfTokenX;
+        positionY = positionOfTokenY;
+        tokenNumber= 0;
+        while (positionY != tokenMatrix.length - 1 && positionX != 0) {
+            positionY++;
+            positionX--;
+            if (tokenMatrix[positionY][positionX] != null) {
+                tokenNumber = tokenMatrix[positionY][positionX].getTokenNumber();
+                sum.add(0, sum.get(0) + tokenNumber);
+            }
+        }
+
+        positionX = positionOfTokenX;
+        positionY = positionOfTokenY;
+        tokenNumber= 0;                
+        for (int i = 0; i < tokenMatrix.length; i++) {
+            if (tokenMatrix[i][positionX] != null && i != positionY) {
+                tokenNumber = tokenMatrix[i][positionX].getTokenNumber();
+                sum.add(2, sum.get(2) + tokenNumber);
+            }
+        }
+        tokenNumber= 0;
+        for (int j = 0; j < tokenMatrix[0].length; j++) {
+            if (tokenMatrix[positionY][j] != null && j != positionX) {
+                 tokenNumber = tokenMatrix[positionY][j].getTokenNumber();
+                sum.add(3, sum.get(3) + tokenNumber); 
+            }
+        }
+        
+        for (int i = 0; i < sum.size(); i++) {
+            if(sum.get(i)<1||sum.get(i)>8||sum.get(i)==initialValue){
+            System.out.println(""+sum.get(i));
+            }
+        }
+         return sum;
     }
 }

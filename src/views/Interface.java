@@ -6,7 +6,6 @@ import java.util.Scanner;
 import domains.Game;
 import domains.GameBoard;
 import domains.Match;
-import domains.Movement;
 import domains.Player;
 import domains.Token;
 import java.util.Arrays;
@@ -144,7 +143,7 @@ public class Interface {
 
         System.out.println("Elige los jugadores");
         for (int i = 0; i < sizeOfPlayerList; i++) {
-            System.out.print((i + 1) + ": " + game.getListOfPlayers().get(i));
+            System.out.print("\n"+(i + 1) + ":" + game.getListOfPlayers().get(i));
         }
         while (!firstPlayerIsCorrect) {
             System.out.println("");
@@ -186,18 +185,15 @@ public class Interface {
     }
 
     public static void turnByTurn(Game game, Match match, GameBoard gameboard) {
-        Movement movement = new Movement(gameboard);
 
         boolean isFinished = false;
 
         while (!isFinished) {
             
             System.out.println("Turno del jugador Rojo\n\n");
-            
             Interface.turnRed(game, match, gameboard);
             
             System.out.println("Turno del jugador Azul\n\n");
-
             Interface.turnBlue(game, match, gameboard);
 
             isFinished = match.isFinished();
@@ -210,7 +206,6 @@ public class Interface {
 
         GameBoard actualGameBoard = gameboard;
         Player auxPlayer = actualGameBoard.getPlayerRed();
-        Movement movement;
 
         boolean isTurnRed = true;
         boolean validMovement = false;
@@ -248,17 +243,18 @@ public class Interface {
                             actualGameBoard.searchPositionOfToken(tokenToMove, auxPlayer);
                             positionOfTokenX = actualGameBoard.getTokenPositionX();
                             positionOfTokenY = actualGameBoard.getTokenPositionY();
-
+                            
                             validPositionMovement = Interface.validatePositionMovement(auxPlayer, actualGameBoard, positionOfTokenX, positionOfTokenY, movementDirection);
                             if (validPositionMovement) {
                                 validMovement = true;
                                 
                                 actualGameBoard = Interface.movePiece(auxPlayer, actualGameBoard, positionOfTokenX, positionOfTokenY, movementDirection);
                                 Interface.drawCurrentGameBoard(match, actualGameBoard);
-
-                                movement = new Movement(actualGameBoard);
-                                movement.setCurrentGameBoard(actualGameBoard);
-                                posibleTokenMovements = movement.getPossibleMovements(tokenToMove, positionOfTokenX, positionOfTokenY);
+                                //Search the new position
+                                actualGameBoard.searchPositionOfToken(tokenToMove, auxPlayer);
+                                int positionX = actualGameBoard.getTokenPositionX();
+                                int positionY = actualGameBoard.getTokenPositionY();
+                                posibleTokenMovements = actualGameBoard.sumOfDiagonalsAndEdges(tokenToMove,positionX, positionY);
                                 playAtLeastOneTime = true;
                             } else {
                                 System.out.println("\nEl movimiento no es válido porque hay otra ficha o porque te sales del tablero \n");
