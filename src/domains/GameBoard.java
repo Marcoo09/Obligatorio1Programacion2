@@ -12,6 +12,7 @@ public class GameBoard {
     private ArrayList<Player> listOfPlayers;
     private int tokenPositionX;
     private int tokenPositionY;
+    private String mode = "VERN";
     
     public static String[] posibleDirectionsMovements = {"I","A","D"}; 
     
@@ -43,12 +44,28 @@ public class GameBoard {
     public void setTokenMatrix(Token[][] tokenMatrix) {
         this.tokenMatrix = tokenMatrix;
     }
+
+    public String getMode() {
+        return mode;
+    }
+
+    public void setMode(String mode) {
+        this.mode = mode;
+    }
+    
+    
     public Player getPlayerRed(){
         return this.listOfPlayers.get(1);
     }  
+    
     public Player getPlayerBlue(){
-        return this.listOfPlayers.get(1);
+        return this.listOfPlayers.get(0);
     }  
+    
+    public ArrayList<Integer> getPossibleMovements(int parmNumber, int positionOfTokenX, int positionOfTokenY) {
+        
+        return this.sumOfDiagonalsAndEdges(parmNumber, positionOfTokenX, positionOfTokenY);
+    }
 
     public void fillInitialMatrix(int[] tokenNumbers) {
         int row = this.tokenMatrix.length;
@@ -115,11 +132,10 @@ public class GameBoard {
             positionX--;
             if (tokenMatrix[positionY][positionX] != null) {
                 tokenNumber = tokenMatrix[positionY][positionX].getTokenNumber();
-                sum.add(0, sum.get(0) + tokenNumber);
+                sum.set(0, sum.get(0)+tokenNumber);
             }
         }
         tokenNumber= 0;
-
 
         positionX = positionOfTokenX;
         positionY = positionOfTokenY;
@@ -129,7 +145,7 @@ public class GameBoard {
             positionX++;
             if (tokenMatrix[positionY][positionX] != null) {
                 tokenNumber = tokenMatrix[positionY][positionX].getTokenNumber();
-                sum.add(0, sum.get(0) + tokenNumber);
+                sum.set(0, sum.get(0)+tokenNumber);
             }
         }
 
@@ -142,7 +158,7 @@ public class GameBoard {
             positionX++;
             if (tokenMatrix[positionY][positionX] != null) {
                 tokenNumber = tokenMatrix[positionY][positionX].getTokenNumber();
-                sum.add(1, sum.get(1) + tokenNumber);   
+                sum.set(1, sum.get(1)+tokenNumber);   
             }
         }
         positionX = positionOfTokenX;
@@ -153,7 +169,7 @@ public class GameBoard {
             positionX--;
             if (tokenMatrix[positionY][positionX] != null) {
                 tokenNumber = tokenMatrix[positionY][positionX].getTokenNumber();
-                sum.add(0, sum.get(0) + tokenNumber);
+                sum.set(1, sum.get(1)+tokenNumber);
             }
         }
 
@@ -163,20 +179,21 @@ public class GameBoard {
         for (int i = 0; i < tokenMatrix.length; i++) {
             if (tokenMatrix[i][positionX] != null && i != positionY) {
                 tokenNumber = tokenMatrix[i][positionX].getTokenNumber();
-                sum.add(2, sum.get(2) + tokenNumber);
+                sum.set(2, sum.get(2)+tokenNumber);
             }
         }
         tokenNumber= 0;
         for (int j = 0; j < tokenMatrix[0].length; j++) {
             if (tokenMatrix[positionY][j] != null && j != positionX) {
                  tokenNumber = tokenMatrix[positionY][j].getTokenNumber();
-                sum.add(3, sum.get(3) + tokenNumber); 
+                sum.set(3, sum.get(3)+tokenNumber); 
             }
         }
-        
+                
         for (int i = 0; i < sum.size(); i++) {
-            if(sum.get(i)<1||sum.get(i)>8||sum.get(i)==initialValue){
-            System.out.println(""+sum.get(i));
+            if (sum.get(i)==initialValue|| sum.get(i)>8) {
+                sum.remove(i);
+                i--;
             }
         }
          return sum;

@@ -47,9 +47,7 @@ public class Interface {
 
                     gameboard = new GameBoard(match.getListOfPlayers());
 
-                    String mode = Interface.askForMode();
-
-                    Interface.drawDefaultGameBoard(gameboard, mode, match);
+                    Interface.drawDefaultGameBoard(gameboard, match);
 
                     Interface.turnByTurn(game, match, gameboard);
 
@@ -143,7 +141,7 @@ public class Interface {
 
         System.out.println("Elige los jugadores");
         for (int i = 0; i < sizeOfPlayerList; i++) {
-            System.out.print("\n"+(i + 1) + ":" + game.getListOfPlayers().get(i));
+            System.out.print("\n" + (i + 1) + ": " + game.getListOfPlayers().get(i));
         }
         while (!firstPlayerIsCorrect) {
             System.out.println("");
@@ -189,38 +187,51 @@ public class Interface {
         boolean isFinished = false;
 
         while (!isFinished) {
-            
+
             System.out.println("Turno del jugador Rojo\n\n");
-            Interface.turnRed(game, match, gameboard);
+
+            Interface.turn(game, match, gameboard, "red");
             
-            System.out.println("Turno del jugador Azul\n\n");
-            Interface.turnBlue(game, match, gameboard);
+            isFinished = match.isFinished();
+            
+            if(!isFinished){
+                System.out.println("Turno del jugador Azul\n\n");
+                Interface.turn(game, match, gameboard,"blue");                
+            }
 
             isFinished = match.isFinished();
         }
 
     }
 
-    public static void turnRed(Game game, Match match, GameBoard gameboard) {
+    public static void turn(Game game, Match match, GameBoard gameboard,String playerColor) {
         Scanner input = new Scanner(System.in);
 
         GameBoard actualGameBoard = gameboard;
-        Player auxPlayer = actualGameBoard.getPlayerRed();
+        Player player = null;
+                
+        if(playerColor.equals("red")){
+            player = actualGameBoard.getPlayerRed();
+        }else if(playerColor.equals("blue")){
+            player = actualGameBoard.getPlayerBlue();
+        }
 
         boolean isTurnRed = true;
         boolean validMovement = false;
         boolean validPositionMovement;
         boolean playAtLeastOneTime;
         boolean validResponse = false;
+
         ArrayList<Integer> posibleTokenMovements = new ArrayList<>(Arrays.asList(1, 2, 3, 4, 5, 6, 7, 8));
 
         String allDataAboutMovement;
-        int tokenToMove = 0;
         String movementDirection;
+        String mode;
+        String continueTurn;
+
+        int tokenToMove = 0;
         int positionOfTokenX;
         int positionOfTokenY;
-
-        String continueTurn;
 
         while (isTurnRed) {
             playAtLeastOneTime = false;
@@ -229,56 +240,76 @@ public class Interface {
             Interface.showPosibleDirectionsMovements(posibleTokenMovements, tokenToMove);
             System.out.println("\n(D)DERECHA (I)IZQUIERA (A)ADELANTE \n");
 
+            System.out.println("Posibles jugadas: \n                  MOVIMIENTO\n                  CAMBIO DE TABLERO\n                  X para retirarse");
+            
+            blockWhile:
             while (!validMovement) {
-                
-                allDataAboutMovement = Interface.askForString("una ficha acompañada del movimiento que deseas");
-                allDataAboutMovement = allDataAboutMovement.trim();
-                if (allDataAboutMovement.length() == 2) {
-                    try {
-                        tokenToMove = Integer.parseInt("" + allDataAboutMovement.charAt(0));
-                        movementDirection = Character.toString(allDataAboutMovement.charAt(1));
-                        //Validate if the movement is posible and the direction is correct
-                        if (posibleTokenMovements.contains(tokenToMove) && Interface.validMovementDirectionInput(movementDirection)) {
-                            
-                            actualGameBoard.searchPositionOfToken(tokenToMove, auxPlayer);
-                            positionOfTokenX = actualGameBoard.getTokenPositionX();
-                            positionOfTokenY = actualGameBoard.getTokenPositionY();
-                            
-                            validPositionMovement = Interface.validatePositionMovement(auxPlayer, actualGameBoard, positionOfTokenX, positionOfTokenY, movementDirection);
-                            if (validPositionMovement) {
-                                validMovement = true;
-                                
-                                actualGameBoard = Interface.movePiece(auxPlayer, actualGameBoard, positionOfTokenX, positionOfTokenY, movementDirection);
-                                Interface.drawCurrentGameBoard(match, actualGameBoard);
-                                //Search the new position
-                                actualGameBoard.searchPositionOfToken(tokenToMove, auxPlayer);
-                                int positionX = actualGameBoard.getTokenPositionX();
-                                int positionY = actualGameBoard.getTokenPositionY();
-                                posibleTokenMovements = actualGameBoard.sumOfDiagonalsAndEdges(tokenToMove,positionX, positionY);
-                                playAtLeastOneTime = true;
-                            } else {
-                                System.out.println("\nEl movimiento no es válido porque hay otra ficha o porque te sales del tablero \n");
-                            }
+                System.out.println("");
+                allDataAboutMovement = Interface.askForString("una jugada");
+                allDataAboutMovement = allDataAboutMovement.trim().toLowerCase();
 
+                if (allDataAboutMovement.equals("x")) {
+                    isTurnRed = false;
+                    match.setWinner(player);
+                    break blockWhile;
+                }else if(allDataAboutMovement.equals("vern") || allDataAboutMovement.equals("verr")){                
+                    gameboard.setMode(allDataAboutMovement);
+                    Interface.drawCurrentGameBoard(match, gameboard);
+                }else{
+                    
+                    if (allDataAboutMovement.length() == 2) {
+                        try {
+                            tokenToMove = Integer.parseInt("" + allDataAboutMovement.charAt(0));
+                            movementDirection = Character.toString(allDataAboutMovement.charAt(1));
+                            
+                            //Validate if the movement is posible and the direction is correct
+                            if (posibleTokenMovements.contains(tokenToMove) && Interface.validMovementDirectionInput(movementDirection)) {
+
+                                actualGameBoard.searchPositionOfToken(tokenToMove, player);
+                                positionOfTokenX = actualGameBoard.getTokenPositionX();
+                                positionOfTokenY = actualGameBoard.getTokenPositionY();
+
+                                validPositionMovement = Interface.validatePositionMovement(player, actualGameBoard, positionOfTokenX, positionOfTokenY, movementDirection);
+                                if (validPositionMovement) {
+                                    validMovement = true;
+
+                                    actualGameBoard = Interface.movePiece(player, actualGameBoard, positionOfTokenX, positionOfTokenY, movementDirection);
+                                    Interface.drawCurrentGameBoard(match, actualGameBoard);
+
+                                    actualGameBoard.searchPositionOfToken(tokenToMove, player);
+
+                                    positionOfTokenX = actualGameBoard.getTokenPositionX();
+                                    positionOfTokenY = actualGameBoard.getTokenPositionY();
+
+                                    posibleTokenMovements = actualGameBoard.getPossibleMovements(tokenToMove, positionOfTokenX, positionOfTokenY);
+                                    
+                                    playAtLeastOneTime = true;
+                                } else {
+                                    System.out.println("El movimiento no es válido porque hay otra ficha o porque te sales del tablero \n");
+                                }
+
+                            }else{
+                                System.out.println("\nLa ficha o la dirección no son válidas");
+                            }
+                        } catch (InputMismatchException e) {
+                            if (e.toString().equals("java.util.InputMismatchException")) {
+                                System.out.println("Debes ingresar un número");
+                            } else {
+                                System.out.println("Debes ingresar un número más corto");
+                            }
+                            validMovement = false;
+                            input.next();
                         }
-                    } catch (InputMismatchException e) {
-                        if (e.toString().equals("java.util.InputMismatchException")) {
-                            System.out.println("Debes ingresar un número");
-                        } else {
-                            System.out.println("Debes ingresar un número más corto");
-                        }
-                        validMovement = false;
-                        input.next();
+                    } else {
+                        System.out.println("Ingrese un valor correcto");
                     }
-                } else {
-                    System.out.println("Ingrese un valor correcto");
                 }
 
             }
-            
+
             //Verify if the player have the possibility to continue or if don't want to continue
             if (playAtLeastOneTime) {
-                if (posibleTokenMovements.isEmpty() || (posibleTokenMovements.size() == 1 && posibleTokenMovements.get(0) == tokenToMove)) {
+                if (posibleTokenMovements.isEmpty()) {
                     System.out.println("No tienes más movimientos posibles \n");
                     isTurnRed = false;
                 } else {
@@ -297,7 +328,7 @@ public class Interface {
 
                     if (continueTurn.equalsIgnoreCase("N")) {
                         isTurnRed = false;
-                    }else{
+                    } else {
                         validMovement = false;
                     }
 
@@ -307,61 +338,17 @@ public class Interface {
         }
     }
 
-    public static void turnBlue(Game game, Match match, GameBoard gameboard) {
-        Scanner input = new Scanner(System.in);
-
-        boolean isTurnBlue = true;
-        boolean validInputMovement = false;
-        boolean validMovement;
-        ArrayList<Integer> posibleTokenMovements = new ArrayList<>(Arrays.asList(1, 2, 3, 4, 5, 6, 7, 8));
-
-        String allDataAboutMovement;
-        int tokenToMove = 0;
-        String movementDirection;
-
-        while (isTurnBlue) {
-            System.out.println("Posibles movimientos:");
-            Interface.showPosibleDirectionsMovements(posibleTokenMovements,0);
-            System.out.println("\n(D)DERECHA (I)IZQUIERA (A)ADELANTE \n");
-            while (!validInputMovement) {
-
-                allDataAboutMovement = Interface.askForString("una ficha acompañada del movimiento que deseas");
-                allDataAboutMovement.trim();
-                if (allDataAboutMovement.length() == 2) {
-                    try {
-                        tokenToMove = allDataAboutMovement.charAt(0);
-                        movementDirection = Character.toString(allDataAboutMovement.charAt(1));
-
-                        if (Interface.validateAttribute(tokenToMove, 1, 8) && Interface.validMovementDirectionInput(movementDirection)) {
-                            //Hay que hacer la valdiación de movimiento
-                            Interface.drawCurrentGameBoard(match, gameboard);
-                        }
-                    } catch (InputMismatchException e) {
-                        if (e.toString().equals("java.util.InputMismatchException")) {
-                            System.out.println("Debes ingresar un número");
-                        } else {
-                            System.out.println("Debes ingresar un número más corto");
-                        }
-                        validInputMovement = false;
-                        input.next();
-                    }
-                }
-
-            }
-
-        }
-    }
-
-    public static void drawDefaultGameBoard(GameBoard gameboard, String mode, Match match) {
+    public static void drawDefaultGameBoard(GameBoard gameboard, Match match) {
         Token tokenMatrix[][] = gameboard.getTokenMatrix();
         int row = tokenMatrix.length;
         int col = tokenMatrix[0].length;
+        String mode = gameboard.getMode();
         int[] tokens = {0, 1, 2, 3, 4, 5, 6, 7, 8};
 
         gameboard.fillInitialMatrix(tokens);
         match.setGameBoard(gameboard);
 
-        if (mode.equals("verr")) {
+        if (mode.equalsIgnoreCase("verr")) {
             for (int i = 0; i < row; i++) {
                 for (int j = 0; j < col; j++) {
                     if (tokenMatrix[i][j] != null) {
@@ -372,7 +359,7 @@ public class Interface {
                 }
                 System.out.println("");
             }
-        } else if (mode.equals("vern")) {
+        } else if (mode.equalsIgnoreCase("vern")) {
             for (int i = 0; i < row; i++) {
                 System.out.println("+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+");
                 for (int j = 0; j < col; j++) {
@@ -398,13 +385,11 @@ public class Interface {
         Token tokenMatrix[][] = gameboard.getTokenMatrix();
         int row = tokenMatrix.length;
         int col = tokenMatrix[0].length;
-        String mode;
-        
-        mode = Interface.askForMode();
-        
+        String mode = gameboard.getMode();
+
         match.setGameBoard(gameboard);
 
-        if (mode.equals("verr")) {
+        if (mode.equalsIgnoreCase("verr")) {
             for (int i = 0; i < row; i++) {
                 for (int j = 0; j < col; j++) {
                     if (tokenMatrix[i][j] != null) {
@@ -415,7 +400,7 @@ public class Interface {
                 }
                 System.out.println("");
             }
-        } else if (mode.equals("vern")) {
+        } else if (mode.equalsIgnoreCase("vern")) {
             for (int i = 0; i < row; i++) {
                 System.out.println("+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+");
                 for (int j = 0; j < col; j++) {
@@ -431,7 +416,7 @@ public class Interface {
             }
             System.out.print("+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+\n\n");
 
-        }       
+        }
 
     }
 
@@ -445,7 +430,7 @@ public class Interface {
 
         ArrayList<Match> listOfMatches = game.getListOfMatches();
         game.sortMatchesByDateTime();
-        
+
         Match currentMatch = null;
 
         System.out.println("Elige una de las siguientes partidas para repetir:\n");
@@ -463,7 +448,7 @@ public class Interface {
         System.out.println("Presione n para avanzar de jugada o s para salir\n");
         for (int i = 0; i < listOfGameBoards.size() && !exitValidator; i++) {
             entry = "";
-            Interface.drawCurrentGameBoard(currentMatch ,listOfGameBoards.get(i));
+            Interface.drawCurrentGameBoard(currentMatch, listOfGameBoards.get(i));
             while (!entry.equals("n") && !exitValidator) {
                 entry = input.nextLine();
                 exitValidator = entry.equals("s");
@@ -474,14 +459,14 @@ public class Interface {
     }
 
     /*Utils used above*/
-    
+   
     //This method ask for a String and return the value
     public static String askForString(String whatToAsk) {
         Scanner inputString = new Scanner(System.in);
         System.out.print("Ingrese " + whatToAsk + ": ");
         return inputString.nextLine();
     }
-    
+
     //This method ask for a Number and return the value
     public static int askForNumeric(String whatToAsk) {
         boolean repeat = true;
@@ -506,22 +491,7 @@ public class Interface {
         return ret;
     }
 
-    public static String askForMode() {
-        String ret = "";
-        boolean isCorrect = false;
-
-        while (!isCorrect) {
-            ret = Interface.askForString("modo a ver el tablero");
-            ret.toLowerCase();
-            if (ret.equalsIgnoreCase("verr") || ret.equalsIgnoreCase("vern")) {
-                isCorrect = true;
-            }
-        }
-
-        return ret;
-    }
-
-    private static GameBoard movePiece(Player auxPlayer, GameBoard actualGameBoard, int positionOfTokenX, int positionOfTokenY, String movementDirection) {
+    public static GameBoard movePiece(Player auxPlayer, GameBoard actualGameBoard, int positionOfTokenX, int positionOfTokenY, String movementDirection) {
         Token[][] matrix = actualGameBoard.getTokenMatrix();
 
         //Player Red
@@ -561,8 +531,8 @@ public class Interface {
         actualGameBoard.setTokenMatrix(matrix);
         return actualGameBoard;
     }
-    //Range Validator
 
+    //Range Validator in attribute
     public static boolean validateAttribute(int numberToValidate, int intialRange, int finalRange) {
         //Check if the first parameter is between the range
         boolean returnValue = (numberToValidate >= intialRange && numberToValidate <= finalRange);
@@ -570,6 +540,12 @@ public class Interface {
             System.out.println("Ingrese un valor entre " + intialRange + " - " + finalRange);
         }
         return returnValue;
+    }
+    
+    //Range Validator in values only (without system out)
+    public static boolean validateRange(int numberToValidate, int intialRange, int finalRange) {
+        //Check if the first parameter is between the range        
+        return (numberToValidate >= intialRange && numberToValidate <= finalRange);
     }
 
     public static boolean validMovementDirectionInput(String inputMovement) {
@@ -583,7 +559,7 @@ public class Interface {
         return isValidMovement;
     }
 
-    private static boolean validatePositionMovement(Player auxPlayer, GameBoard actualGameBoard, int positionOfTokenX, int positionOfTokenY, String movementDirection) {
+    public static boolean validatePositionMovement(Player auxPlayer, GameBoard actualGameBoard, int positionOfTokenX, int positionOfTokenY, String movementDirection) {
         Token[][] matrix = actualGameBoard.getTokenMatrix();
         Token auxTokenToCompare = null;
 
@@ -593,55 +569,54 @@ public class Interface {
 
         //Player Red
         if (auxPlayer.equals(actualGameBoard.getPlayerRed())) {
-            isOutOfRangeY = Interface.validateAttribute(positionOfTokenY - 1, 0, 7);
+            isOutOfRangeY = Interface.validateRange(positionOfTokenY - 1, 0, 7);
 
             if (movementDirection.equalsIgnoreCase("D")) {
-                isOutOfRangeX = Interface.validateAttribute(positionOfTokenX + 1, 0, 8);
+                isOutOfRangeX = Interface.validateRange(positionOfTokenX + 1, 0, 8);
 
                 if (isOutOfRangeX && isOutOfRangeY) {
                     auxTokenToCompare = matrix[positionOfTokenY - 1][positionOfTokenX + 1];
-                    
+
                     if (auxTokenToCompare == null) {
                         isValidPositionMovement = true;
                     }
                 }
 
-
             } else if (movementDirection.equalsIgnoreCase("I")) {
-                isOutOfRangeX = Interface.validateAttribute(positionOfTokenX - 1, 0, 8);
+                isOutOfRangeX = Interface.validateRange(positionOfTokenX - 1, 0, 8);
 
                 if (isOutOfRangeX && isOutOfRangeY) {
                     auxTokenToCompare = matrix[positionOfTokenY - 1][positionOfTokenX - 1];
-                    
-                    if (auxTokenToCompare == null) {
-                        isValidPositionMovement = true;
-                    }                    
-                }
 
-            } else if (movementDirection.equalsIgnoreCase("A")) {
-                isOutOfRangeX = Interface.validateAttribute(positionOfTokenX, 0, 8);
-
-                if (isOutOfRangeX && isOutOfRangeY) {
-                    auxTokenToCompare = matrix[positionOfTokenY - 1][positionOfTokenX];
-                
                     if (auxTokenToCompare == null) {
                         isValidPositionMovement = true;
                     }
-                                    
+                }
+
+            } else if (movementDirection.equalsIgnoreCase("A")) {
+                isOutOfRangeX = Interface.validateRange(positionOfTokenX, 0, 8);
+
+                if (isOutOfRangeX && isOutOfRangeY) {
+                    auxTokenToCompare = matrix[positionOfTokenY - 1][positionOfTokenX];
+
+                    if (auxTokenToCompare == null) {
+                        isValidPositionMovement = true;
+                    }
+
                 }
 
             }
         } //Player blue
         else if (auxPlayer.equals(actualGameBoard.getPlayerBlue())) {
 
-            isOutOfRangeY = Interface.validateAttribute(positionOfTokenY + 1, 0, 7);
+            isOutOfRangeY = Interface.validateRange(positionOfTokenY + 1, 0, 7);
 
             if (movementDirection.equalsIgnoreCase("D")) {
-                isOutOfRangeX = Interface.validateAttribute(positionOfTokenX - 1, 0, 8);
+                isOutOfRangeX = Interface.validateRange(positionOfTokenX - 1, 0, 8);
 
                 if (isOutOfRangeX && isOutOfRangeY) {
                     auxTokenToCompare = matrix[positionOfTokenY + 1][positionOfTokenX - 1];
-                    
+
                     if (auxTokenToCompare == null) {
                         isValidPositionMovement = true;
                     }
@@ -649,11 +624,11 @@ public class Interface {
                 }
 
             } else if (movementDirection.equalsIgnoreCase("I")) {
-                isOutOfRangeX = Interface.validateAttribute(positionOfTokenX + 1, 0, 8);
+                isOutOfRangeX = Interface.validateRange(positionOfTokenX + 1, 0, 8);
 
                 if (isOutOfRangeX && isOutOfRangeY) {
                     auxTokenToCompare = matrix[positionOfTokenY + 1][positionOfTokenX + 1];
-                    
+
                     if (auxTokenToCompare == null) {
                         isValidPositionMovement = true;
                     }
@@ -661,15 +636,15 @@ public class Interface {
                 }
 
             } else if (movementDirection.equalsIgnoreCase("A")) {
-                isOutOfRangeX = Interface.validateAttribute(positionOfTokenX, 0, 8);
+                isOutOfRangeX = Interface.validateRange(positionOfTokenX, 0, 8);
 
                 if (isOutOfRangeX && isOutOfRangeY) {
                     auxTokenToCompare = matrix[positionOfTokenY + 1][positionOfTokenX];
-                
+
                     if (auxTokenToCompare == null) {
                         isValidPositionMovement = true;
                     }
-                    
+
                 }
 
             }
@@ -681,15 +656,11 @@ public class Interface {
     public static void showPosibleDirectionsMovements(ArrayList<Integer> posibleTokenMovents, int tokenMoved) {
         int currentValue;
         ArrayList<Integer> auxArraylist = new ArrayList<>();
-        Iterator<Integer> it =  posibleTokenMovents.iterator();
-        
-        while(it.hasNext()){
+        Iterator<Integer> it = posibleTokenMovents.iterator();
+
+        while (it.hasNext()) {
             currentValue = it.next();
-            
-           // if((currentValue < 9 && currentValue != tokenMoved) && !auxArraylist.contains(currentValue)){
-                System.out.print(currentValue + " ");
-               // auxArraylist.add(currentValue);
-            //}
+            System.out.print(currentValue + " ");
         }
 
     }

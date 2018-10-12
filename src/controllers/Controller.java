@@ -1,13 +1,7 @@
 package controllers;
 
-import java.util.ArrayList;
-import java.util.InputMismatchException;
-import java.util.Scanner;
-import domains.Game;
-import domains.GameBoard;
-import domains.Match;
-import domains.Player;
-import domains.Token;
+import java.util.*;
+import domains.*;
 import views.Interface;
 
 /*
