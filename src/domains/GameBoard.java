@@ -120,22 +120,24 @@ public class GameBoard {
     }
     
     public ArrayList<Integer> sumOfDiagonalsAndEdges(int initialValue, int positionOfTokenX, int positionOfTokenY) {
-        ArrayList<Integer> sum = new ArrayList<>(Arrays.asList(initialValue, initialValue, initialValue, initialValue));
+        ArrayList<Integer> sum = new ArrayList<>();
         //Initial point of diagonal
         int positionX = positionOfTokenX;
         int positionY = positionOfTokenY;
-        int tokenNumber= 0;
         
-        //Primera diagonal
+        int firstDiagonal = initialValue;
+        int secondDiagonal = initialValue;
+        int horizontalSum = initialValue;
+        int verticalSum = initialValue;
+        
+        //First Diagonal
         while (positionY != 0 && positionX != 0) {
             positionY--;
             positionX--;
             if (tokenMatrix[positionY][positionX] != null) {
-                tokenNumber = tokenMatrix[positionY][positionX].getTokenNumber();
-                sum.set(0, sum.get(0)+tokenNumber);
+                firstDiagonal += tokenMatrix[positionY][positionX].getTokenNumber();
             }
-        }
-        tokenNumber= 0;
+        }        
 
         positionX = positionOfTokenX;
         positionY = positionOfTokenY;
@@ -144,58 +146,65 @@ public class GameBoard {
             positionY++;
             positionX++;
             if (tokenMatrix[positionY][positionX] != null) {
-                tokenNumber = tokenMatrix[positionY][positionX].getTokenNumber();
-                sum.set(0, sum.get(0)+tokenNumber);
+                firstDiagonal += tokenMatrix[positionY][positionX].getTokenNumber();
             }
+        }
+        
+        if(firstDiagonal != initialValue && firstDiagonal < 9 && !(sum.contains(firstDiagonal))){
+            sum.add(firstDiagonal);
         }
 
         positionX = positionOfTokenX;
         positionY = positionOfTokenY;
-        tokenNumber= 0;
-        //2da
+
+        //Second Diagonala
         while (positionY != 0 && positionX != tokenMatrix[0].length - 1) {
             positionY--;
             positionX++;
             if (tokenMatrix[positionY][positionX] != null) {
-                tokenNumber = tokenMatrix[positionY][positionX].getTokenNumber();
-                sum.set(1, sum.get(1)+tokenNumber);   
+                secondDiagonal += tokenMatrix[positionY][positionX].getTokenNumber();
             }
         }
         positionX = positionOfTokenX;
         positionY = positionOfTokenY;
-        tokenNumber= 0;
+
         while (positionY != tokenMatrix.length - 1 && positionX != 0) {
             positionY++;
             positionX--;
             if (tokenMatrix[positionY][positionX] != null) {
-                tokenNumber = tokenMatrix[positionY][positionX].getTokenNumber();
-                sum.set(1, sum.get(1)+tokenNumber);
+                secondDiagonal += tokenMatrix[positionY][positionX].getTokenNumber();
             }
+        }
+        
+        if(secondDiagonal != initialValue && secondDiagonal < 9 && !(sum.contains(secondDiagonal))){
+            sum.add(secondDiagonal);
         }
 
         positionX = positionOfTokenX;
         positionY = positionOfTokenY;
-        tokenNumber= 0;                
+        
+        //Horizontal SUm
         for (int i = 0; i < tokenMatrix.length; i++) {
             if (tokenMatrix[i][positionX] != null && i != positionY) {
-                tokenNumber = tokenMatrix[i][positionX].getTokenNumber();
-                sum.set(2, sum.get(2)+tokenNumber);
+                horizontalSum += tokenMatrix[i][positionX].getTokenNumber();
             }
         }
-        tokenNumber= 0;
-        for (int j = 0; j < tokenMatrix[0].length; j++) {
-            if (tokenMatrix[positionY][j] != null && j != positionX) {
-                 tokenNumber = tokenMatrix[positionY][j].getTokenNumber();
-                sum.set(3, sum.get(3)+tokenNumber); 
-            }
+        
+        if(horizontalSum != initialValue && horizontalSum < 9 && !(sum.contains(horizontalSum))){
+            sum.add(horizontalSum);
         }
                 
-        for (int i = 0; i < sum.size(); i++) {
-            if (sum.get(i)==initialValue|| sum.get(i)>8) {
-                sum.remove(i);
-                i--;
+        //Vertical Sum
+        for (int j = 0; j < tokenMatrix[0].length; j++) {
+            if (tokenMatrix[positionY][j] != null && j != positionX) {
+                verticalSum += tokenMatrix[positionY][j].getTokenNumber();
             }
         }
+        
+        if(verticalSum != initialValue && verticalSum < 9 && !(sum.contains(verticalSum))){
+            sum.add(verticalSum);
+        }
+                
          return sum;
     }
 }
