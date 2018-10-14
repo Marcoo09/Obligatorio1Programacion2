@@ -4,7 +4,7 @@ package domains;
  * @author Marco Fiorito and Felipe Najson
  */
 
-public class Token {
+public class Token{
     private String color;
     private int tokenNumber;
     private Player player;
@@ -44,5 +44,4 @@ public class Token {
     public void setPlayer(Player player) {
         this.player = player;
     }
-        
 }

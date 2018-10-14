@@ -351,7 +351,7 @@ public class Interface {
         int col = tokenMatrix[0].length;
         String mode = gameboard.getMode();
         int[] tokens = {0, 1, 2, 3, 4, 5, 6, 7, 8};
-
+        
         gameboard.fillInitialMatrix(tokens);
         match.setGameBoard(gameboard);
 
@@ -436,6 +436,7 @@ public class Interface {
         Scanner input = new Scanner(System.in);
 
         ArrayList<Match> listOfMatches = game.getListOfMatches();
+        
         game.sortMatchesByDateTime();
 
         Match currentMatch = null;
@@ -445,20 +446,27 @@ public class Interface {
             currentMatch = listOfMatches.get(i);
             System.out.println("Partida " + (i + 1) + ": " + currentMatch.getDateTime());
         }
+        
         while (!indexOfMatchValidator) {
             chosenOption = Interface.askForNumeric("partida");
             indexOfMatchValidator = Interface.validateAttribute(chosenOption, 1, listOfMatches.size());
         }
+        
         Match selectedMatch = listOfMatches.get(chosenOption - 1);
         ArrayList<GameBoard> listOfGameBoards = selectedMatch.getListOfGameBoard();
-
+        
+        System.out.println("Size " + listOfGameBoards.size());
+        
         System.out.println("Presione n para avanzar de jugada o s para salir\n");
-        for (int i = 0; i < listOfGameBoards.size() && !exitValidator; i++) {
+        
+        forloop:
+        for (int i = 0; i < listOfGameBoards.size(); i++) {
+            System.out.println(" valor de i " + i);
             entry = "";
             Interface.drawCurrentGameBoard(currentMatch, listOfGameBoards.get(i));
-            while (!entry.equals("n") && !exitValidator) {
+            while (!entry.equalsIgnoreCase("n") && !exitValidator) {
                 entry = input.nextLine();
-                exitValidator = entry.equals("s");
+                exitValidator = entry.equalsIgnoreCase("s");
 
             }
         }

@@ -9,7 +9,7 @@ import views.Interface;
  */
 public class Controller {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws CloneNotSupportedException {
         
         /*Instance of view*/
         Interface view = new Interface();
