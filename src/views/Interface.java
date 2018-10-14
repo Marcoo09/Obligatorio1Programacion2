@@ -216,7 +216,7 @@ public class Interface {
             player = actualGameBoard.getPlayerBlue();
         }
 
-        boolean isTurnRed = true;
+        boolean isTurn = true;
         boolean validMovement = false;
         boolean validPositionMovement;
         boolean playAtLeastOneTime;
@@ -233,7 +233,7 @@ public class Interface {
         int positionOfTokenX;
         int positionOfTokenY;
 
-        while (isTurnRed) {
+        while (isTurn) {
             playAtLeastOneTime = false;
 
             System.out.println("Posibles movimientos: ");
@@ -249,7 +249,7 @@ public class Interface {
                 allDataAboutMovement = allDataAboutMovement.trim().toLowerCase();
 
                 if (allDataAboutMovement.equals("x")) {
-                    isTurnRed = false;
+                    isTurn = false;
                     match.setWinner(player);
                     break blockWhile;
                 }else if(allDataAboutMovement.equals("vern") || allDataAboutMovement.equals("verr")){                
@@ -266,6 +266,7 @@ public class Interface {
                             if (posibleTokenMovements.contains(tokenToMove) && Interface.validMovementDirectionInput(movementDirection)) {
 
                                 actualGameBoard.searchPositionOfToken(tokenToMove, player);
+                                
                                 positionOfTokenX = actualGameBoard.getTokenPositionX();
                                 positionOfTokenY = actualGameBoard.getTokenPositionY();
 
@@ -292,6 +293,7 @@ public class Interface {
                                 System.out.println("\nLa ficha o la dirección no son válidas");
                             }
                         } catch (InputMismatchException e) {
+                            //java.lang.NumberFormatException
                             if (e.toString().equals("java.util.InputMismatchException")) {
                                 System.out.println("Debes ingresar un número");
                             } else {
@@ -311,7 +313,7 @@ public class Interface {
             if (playAtLeastOneTime) {
                 if (posibleTokenMovements.isEmpty()) {
                     System.out.println("No tienes más movimientos posibles \n");
-                    isTurnRed = false;
+                    isTurn = false;
                 } else {
                     continueTurn = Interface.askForString("si quieres seguir jugando (S) o (N)");
                     continueTurn.trim();
@@ -327,7 +329,7 @@ public class Interface {
                     }
 
                     if (continueTurn.equalsIgnoreCase("N")) {
-                        isTurnRed = false;
+                        isTurn = false;
                     } else {
                         validMovement = false;
                     }
