@@ -6,7 +6,7 @@ import java.util.Arrays;
 /**
  * @author Felipe Najson and Marco Fiorito
  */
-public class GameBoard implements Cloneable {
+public class GameBoard{
 
     private Token[][] tokenMatrix;
     private ArrayList<Player> listOfPlayers;
@@ -19,10 +19,7 @@ public class GameBoard implements Cloneable {
     public GameBoard(ArrayList<Player> listOfPlayers) {
         this.tokenMatrix = new Token[8][9];
         this.listOfPlayers = listOfPlayers;
-    }
-    
-    public GameBoard() {
-    }
+    }    
 
     public int getTokenPositionX() {
         return tokenPositionX;
@@ -208,14 +205,6 @@ public class GameBoard implements Cloneable {
         }
 
         return sum;
-    }
-
-    @Override
-    public GameBoard clone() throws CloneNotSupportedException {
-        GameBoard o = null;
-        o = (GameBoard) super.clone();
-        
-        return o;
     }
 
 }

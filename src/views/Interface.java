@@ -261,7 +261,7 @@ public class Interface {
                     break blockWhile;
                 } else if (allDataAboutMovement.equals("vern") || allDataAboutMovement.equals("verr")) {
                     gameboard.setMode(allDataAboutMovement);
-                    Interface.drawCurrentGameBoard(match, gameboard);
+                    Interface.drawCurrentGameBoard(match, gameboard, false);
                 } else {
 
                     if (allDataAboutMovement.length() == 2) {
@@ -282,7 +282,7 @@ public class Interface {
                                     validMovement = true;
 
                                     actualGameBoard = Interface.movePiece(player, actualGameBoard, positionOfTokenX, positionOfTokenY, movementDirection);
-                                    Interface.drawCurrentGameBoard(match, actualGameBoard);
+                                    Interface.drawCurrentGameBoard(match, actualGameBoard, false);
 
                                     actualGameBoard.searchPositionOfToken(tokenToMove, player);
 
@@ -353,7 +353,19 @@ public class Interface {
         int[] tokens = {0, 1, 2, 3, 4, 5, 6, 7, 8};
         
         gameboard.fillInitialMatrix(tokens);
-        match.setGameBoard(gameboard);
+                
+        GameBoard auxGameboard = new GameBoard(match.getListOfPlayers());
+        Token [][] auxMatrix = auxGameboard.getTokenMatrix();
+        
+        for (int i = 0; i < tokenMatrix.length; i++) {
+            for (int j = 0; j < tokenMatrix[0].length; j++) {
+                if(tokenMatrix[i][j] != null){
+                    auxMatrix[i][j]= (Token) tokenMatrix[i][j].clone();
+                }
+            }
+        }
+        
+        match.setGameBoard(auxGameboard);
 
         if (mode.equalsIgnoreCase("verr")) {
             for (int i = 0; i < row; i++) {
@@ -386,15 +398,29 @@ public class Interface {
 
     }
 
-    public static void drawCurrentGameBoard(Match match, GameBoard gameboard) {
+    public static void drawCurrentGameBoard(Match match, GameBoard gameboard, boolean replayMatch) {
         Scanner input = new Scanner(System.in);
 
         Token tokenMatrix[][] = gameboard.getTokenMatrix();
         int row = tokenMatrix.length;
         int col = tokenMatrix[0].length;
         String mode = gameboard.getMode();
-
-        match.setGameBoard(gameboard);
+        
+        GameBoard auxGameboard = new GameBoard(match.getListOfPlayers());
+        Token [][] auxMatrix = auxGameboard.getTokenMatrix();
+        
+        for (int i = 0; i < tokenMatrix.length; i++) {
+            for (int j = 0; j < tokenMatrix[0].length; j++) {
+                if(tokenMatrix[i][j] != null){
+                    auxMatrix[i][j]= (Token) tokenMatrix[i][j].clone();
+                    
+                }
+            }
+        }
+        
+        if(!replayMatch){
+            match.setGameBoard(auxGameboard);
+        }
 
         if (mode.equalsIgnoreCase("verr")) {
             for (int i = 0; i < row; i++) {
@@ -457,13 +483,9 @@ public class Interface {
         
         System.out.println("Size " + listOfGameBoards.size());
         
-        System.out.println("Presione n para avanzar de jugada o s para salir\n");
-        
-        forloop:
-        for (int i = 0; i < listOfGameBoards.size(); i++) {
-            System.out.println(" valor de i " + i);
+        for (int i = 0; i < listOfGameBoards.size() && !exitValidator; i++) {
             entry = "";
-            Interface.drawCurrentGameBoard(currentMatch, listOfGameBoards.get(i));
+            Interface.drawCurrentGameBoard(currentMatch, listOfGameBoards.get(i), true);
             while (!entry.equalsIgnoreCase("n") && !exitValidator) {
                 entry = input.nextLine();
                 exitValidator = entry.equalsIgnoreCase("s");

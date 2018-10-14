@@ -4,7 +4,7 @@ package domains;
  * @author Marco Fiorito and Felipe Najson
  */
 
-public class Token{
+public class Token implements Cloneable{
     private String color;
     private int tokenNumber;
     private Player player;
@@ -44,4 +44,19 @@ public class Token{
     public void setPlayer(Player player) {
         this.player = player;
     }
+
+    @Override
+    public Object clone() {
+        Object o = null;
+        
+        try{
+            o = super.clone();
+        }catch(CloneNotSupportedException e){
+            
+        }
+        
+        return o; 
+    }
+    
+    
 }
