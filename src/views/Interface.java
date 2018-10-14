@@ -113,10 +113,14 @@ public class Interface {
 
     public static void anounceWinner(Match match) {
         Player playerWinner = match.getWinner();
-        playerWinner.setWonGames(playerWinner.getWonGames() + 1);
 
-        System.out.println("El jugador que ha ganado es: \n");
-        System.out.println(playerWinner);
+        if(playerWinner != null){
+            System.out.println("El jugador que ha ganado es: \n");
+            System.out.println(playerWinner);
+            playerWinner.setWonGames(playerWinner.getWonGames() + 1);
+        }else{
+            System.out.println("El juego terminó en empate");
+        }
     }
 
     public static Match beginMatch(Game game) {
@@ -188,32 +192,35 @@ public class Interface {
 
         while (!isFinished) {
 
-            System.out.println("Turno del jugador Rojo\n\n");
+            System.out.println("\033[31mTURNO DEL JUGADOR ROJO \033[30m\n\n");
 
             Interface.turn(game, match, gameboard, "red");
-            
-            isFinished = match.isFinished();
-            
-            if(!isFinished){
-                System.out.println("Turno del jugador Azul\n\n");
-                Interface.turn(game, match, gameboard,"blue");                
+
+            isFinished = match.getFinished();
+
+            if (!isFinished) {
+                System.out.println("\033[34mTURNO DEL JUGADOR AZUL \033[30m\n\n");
+                Interface.turn(game, match, gameboard, "blue");
             }
 
-            isFinished = match.isFinished();
+            isFinished = match.getFinished();
         }
 
     }
 
-    public static void turn(Game game, Match match, GameBoard gameboard,String playerColor) {
+    public static void turn(Game game, Match match, GameBoard gameboard, String playerColor) {
         Scanner input = new Scanner(System.in);
 
         GameBoard actualGameBoard = gameboard;
         Player player = null;
-                
-        if(playerColor.equals("red")){
+        Player notCurrentPlayer = null;
+        
+        if (playerColor.equals("red")) {
             player = actualGameBoard.getPlayerRed();
-        }else if(playerColor.equals("blue")){
+            notCurrentPlayer = actualGameBoard.getPlayerBlue();
+        } else if (playerColor.equals("blue")) {
             player = actualGameBoard.getPlayerBlue();
+            notCurrentPlayer = actualGameBoard.getPlayerRed();
         }
 
         boolean isTurn = true;
@@ -241,7 +248,7 @@ public class Interface {
             System.out.println("\n(D)DERECHA (I)IZQUIERA (A)ADELANTE \n");
 
             System.out.println("Posibles jugadas: \n                  MOVIMIENTO\n                  CAMBIO DE TABLERO\n                  X para retirarse");
-            
+
             blockWhile:
             while (!validMovement) {
                 System.out.println("");
@@ -250,23 +257,23 @@ public class Interface {
 
                 if (allDataAboutMovement.equals("x")) {
                     isTurn = false;
-                    match.setWinner(player);
+                    match.setWinner(notCurrentPlayer);
                     break blockWhile;
-                }else if(allDataAboutMovement.equals("vern") || allDataAboutMovement.equals("verr")){                
+                } else if (allDataAboutMovement.equals("vern") || allDataAboutMovement.equals("verr")) {
                     gameboard.setMode(allDataAboutMovement);
                     Interface.drawCurrentGameBoard(match, gameboard);
-                }else{
-                    
+                } else {
+
                     if (allDataAboutMovement.length() == 2) {
                         try {
                             tokenToMove = Integer.parseInt("" + allDataAboutMovement.charAt(0));
                             movementDirection = Character.toString(allDataAboutMovement.charAt(1));
-                            
+
                             //Validate if the movement is posible and the direction is correct
                             if (posibleTokenMovements.contains(tokenToMove) && Interface.validMovementDirectionInput(movementDirection)) {
 
                                 actualGameBoard.searchPositionOfToken(tokenToMove, player);
-                                
+
                                 positionOfTokenX = actualGameBoard.getTokenPositionX();
                                 positionOfTokenY = actualGameBoard.getTokenPositionY();
 
@@ -283,24 +290,19 @@ public class Interface {
                                     positionOfTokenY = actualGameBoard.getTokenPositionY();
 
                                     posibleTokenMovements = actualGameBoard.getPossibleMovements(tokenToMove, positionOfTokenX, positionOfTokenY);
-                                    
+
                                     playAtLeastOneTime = true;
                                 } else {
                                     System.out.println("El movimiento no es válido porque hay otra ficha o porque te sales del tablero \n");
                                 }
 
-                            }else{
+                            } else {
                                 System.out.println("\nLa ficha o la dirección no son válidas");
                             }
-                        } catch (InputMismatchException e) {
+                        } catch (NumberFormatException e) {
                             //java.lang.NumberFormatException
-                            if (e.toString().equals("java.util.InputMismatchException")) {
-                                System.out.println("Debes ingresar un número");
-                            } else {
-                                System.out.println("Debes ingresar un número más corto");
-                            }
+                            System.out.println("El primer dígito debe ser un número");
                             validMovement = false;
-                            input.next();
                         }
                     } else {
                         System.out.println("Ingrese un valor correcto");
@@ -308,32 +310,35 @@ public class Interface {
                 }
 
             }
-
-            //Verify if the player have the possibility to continue or if don't want to continue
-            if (playAtLeastOneTime) {
-                if (posibleTokenMovements.isEmpty()) {
-                    System.out.println("No tienes más movimientos posibles \n");
-                    isTurn = false;
-                } else {
-                    continueTurn = Interface.askForString("si quieres seguir jugando (S) o (N)");
-                    continueTurn.trim();
-
-                    while (!validResponse) {
-                        if (!(continueTurn.equalsIgnoreCase("S") || continueTurn.equalsIgnoreCase("N"))) {
-                            System.out.println("\nDebes ingresar (S) o (N)\n");
-                            continueTurn = Interface.askForString("si quieres seguir jugando (S) o (N)");
-                            continueTurn.trim();
-                        } else {
-                            validResponse = true;
-                        }
-                    }
-
-                    if (continueTurn.equalsIgnoreCase("N")) {
+            if (match.isFinished()) {
+                isTurn = false;
+            } else {
+                //Verify if the player have the possibility to continue or if don't want to continue
+                if (playAtLeastOneTime) {
+                    if (posibleTokenMovements.isEmpty()) {
+                        System.out.println("No tienes más movimientos posibles \n");
                         isTurn = false;
                     } else {
-                        validMovement = false;
-                    }
+                        continueTurn = Interface.askForString("si quieres seguir jugando (S) o (N)");
+                        continueTurn.trim();
 
+                        while (!validResponse) {
+                            if (!(continueTurn.equalsIgnoreCase("S") || continueTurn.equalsIgnoreCase("N"))) {
+                                System.out.println("\nDebes ingresar (S) o (N)\n");
+                                continueTurn = Interface.askForString("si quieres seguir jugando (S) o (N)");
+                                continueTurn.trim();
+                            } else {
+                                validResponse = true;
+                            }
+                        }
+
+                        if (continueTurn.equalsIgnoreCase("N")) {
+                            isTurn = false;
+                        } else {
+                            validMovement = false;
+                        }
+
+                    }
                 }
             }
 
@@ -461,7 +466,6 @@ public class Interface {
     }
 
     /*Utils used above*/
-   
     //This method ask for a String and return the value
     public static String askForString(String whatToAsk) {
         Scanner inputString = new Scanner(System.in);
@@ -543,7 +547,7 @@ public class Interface {
         }
         return returnValue;
     }
-    
+
     //Range Validator in values only (without system out)
     public static boolean validateRange(int numberToValidate, int intialRange, int finalRange) {
         //Check if the first parameter is between the range        
