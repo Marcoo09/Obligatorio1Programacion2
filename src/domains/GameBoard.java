@@ -204,6 +204,7 @@ public class GameBoard{
             sum.add(verticalSum);
         }
 
+        
         return sum;
     }
 

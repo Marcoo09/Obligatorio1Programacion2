@@ -168,6 +168,7 @@ public class Match implements Comparable {
                 returnedValue = true;
                 this.setWinner(lastGameBoard.getPlayerRed());
             }
+            
             //Verify if all tokens are red
             for (int i = 0; i < 9 && allBlues; i++) {
                 if (lastMatrix[7][i] != null && lastMatrix[7][i].getPlayer().equals(lastGameBoard.getPlayerBlue())) {
@@ -176,13 +177,11 @@ public class Match implements Comparable {
                     allBlues = false;
                 }
             }
+            
             if (allBlues) {
                 this.setFinished(true);
                 returnedValue = true;
                 this.setWinner(lastGameBoard.getPlayerBlue());
-            }
-            if (!(allBlues || allReds)) {
-                this.setWinner(null);
             }
         }
 

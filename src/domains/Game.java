@@ -1,4 +1,4 @@
-package domains;
+    package domains;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -37,6 +37,9 @@ public class Game {
     
     public void sortMatchesByDateTime(){
         Collections.sort(this.getListOfMatches());
+    }
+    public void sortPlayersByWonGames(){
+        Collections.sort(listOfPlayers);
     }
     
 }

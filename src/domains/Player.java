@@ -3,7 +3,7 @@ package domains;
 /*
  * @author Felipe Najson and Marco Fiorito
  */
-public class Player {
+public class Player implements Comparable{
     private String name;
     private String nickName;
     private int age;
@@ -61,7 +61,12 @@ public class Player {
 
     @Override
     public String toString() {
-        return "\n•Nombre: " + this.getName() + "\n•NickName: " + this.getNickName() + "\n•Edad: " + this.getNickName() + "\n•Partidas ganadas " + this.getWonGames() + "\n";
+        return "\n•Nombre: " + this.getName() + "\n•NickName: " + this.getNickName() + "\n•Edad: " + this.getAge()+ "\n•Partidas ganadas: " + this.getWonGames() + "\n";
+    }
+
+    @Override
+    public int compareTo(Object t) {
+        return ((Player)t).getWonGames() - this.getWonGames();
     }
     
 }
