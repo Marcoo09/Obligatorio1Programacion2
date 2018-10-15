@@ -240,6 +240,9 @@ public class Interface {
         int positionOfTokenX;
         int positionOfTokenY;
         
+        posibleTokenMovements = Interface.removeTokensInTheLastRow(actualGameBoard, posibleTokenMovements, playerColor, player);
+
+                                            
         blockWhile:
         while (isTurn) {
             playAtLeastOneTime = false;
