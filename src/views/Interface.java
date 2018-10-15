@@ -201,14 +201,14 @@ public class Interface {
 
         while (!isFinished) {
 
-            System.out.println("\033[31mTURNO DEL JUGADOR ROJO \033[30m\n\n");
+            System.out.println("\n\033[31mTURNO DEL JUGADOR ROJO \033[30m\n\n");
 
             Interface.turn(game, match, gameboard, "red");
 
             isFinished = match.getFinished();
 
             if (!isFinished) {
-                System.out.println("\033[34mTURNO DEL JUGADOR AZUL \033[30m\n\n");
+                System.out.println("\n\033[34mTURNO DEL JUGADOR AZUL \033[30m\n\n");
                 Interface.turn(game, match, gameboard, "blue");
             }
 
@@ -334,6 +334,7 @@ public class Interface {
                         System.out.println("No tienes más movimientos posibles \n");
                         isTurn = false;
                     } else {
+                        validResponse = false;
                         qtyOfMovements++;
                         System.out.println("Posibles movimientos: ");
                         Interface.showPosibleDirectionsMovements(posibleTokenMovements, tokenToMove);
