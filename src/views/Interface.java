@@ -31,7 +31,7 @@ public class Interface {
         String entry = Interface.askForString("opción").toLowerCase();
         switch (entry) {
             case "a":
-                Player newPlayer = Interface.addPlayer();
+                Player newPlayer = Interface.addPlayer(game);
                 game.addPlayer(newPlayer);
                 System.out.println("<----JUGADOR REGISTRADO---->");
                 break;
@@ -61,7 +61,7 @@ public class Interface {
                 break;
             case "d":
                 if (game.getListOfPlayers().isEmpty() || game.getListOfMatches().isEmpty()) {
-                    System.out.println("<----DEBES JUGAR UNA PARTIDAD PREVIAMENTE---->");
+                    System.out.println("<----DEBES JUGAR UNA PARTIDA PREVIAMENTE---->");
                 } else {
                     Interface.showRanking(game);
                 }
@@ -80,21 +80,35 @@ public class Interface {
         return executeProgram;
     }
 
-    public static Player addPlayer() {
+    public static Player addPlayer(Game game) {
+        ArrayList<Player> listOfPlayers = game.getListOfPlayers();
         //Variables of Player
         String name;
-        String nickName;
+        String nickName ="" ;
         int age = 0;
-
+        
+        Player auxPlayer = new Player("","",0);
+        
         //Variables used in validators
         boolean ageValidator = false;
+        boolean nickNameValidator = false;
         //Scanner used in error handling
         Scanner input = new Scanner(System.in);
 
         System.out.println("\n<--------Ingrese los datos del jugador-------->\n ");
 
         name = Interface.askForString("nombre");
-        nickName = Interface.askForString("nickname");
+        //Validation of nickname
+        while(!nickNameValidator){
+                  nickName = Interface.askForString("alias");
+                  auxPlayer.setNickName(nickName);
+                  nickNameValidator = !(listOfPlayers.contains(auxPlayer));
+                  
+                  if(!nickNameValidator){
+                      System.out.println("ALIAS REPETIDO");
+                  }
+        
+        }
         //Validation of age
         while (!ageValidator) {
             age = Interface.askForNumeric("edad");
@@ -476,7 +490,7 @@ public class Interface {
         System.out.println("Elige una de las siguientes partidas para repetir:\n");
         for (int i = 0; i < listOfMatches.size(); i++) {
             currentMatch = listOfMatches.get(i);
-            System.out.println("Partida " + (i + 1) + ": " + currentMatch.getDateTime());
+            System.out.println("Partida " + (i + 1) + ": " + currentMatch);
         }
 
         while (!indexOfMatchValidator) {

@@ -15,7 +15,7 @@ public class Player implements Comparable{
         this.age = age;
         this.wonGames = 0;
     }
-
+            
     public String getName() {
         return name;
     }

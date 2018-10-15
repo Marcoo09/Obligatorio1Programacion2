@@ -180,4 +180,10 @@ public class Match implements Comparable {
         return this.getDateTime().compareTo(parm.getDateTime());
     }
 
+    @Override
+    public String toString() {
+        LocalDateTime time = this.getDateTime();
+        return " Día: " + time.getDayOfMonth() + ". Hora: " + time.getHour() + ":" + time.getMinute() + " - Y la forma de finalización es: "  + this.getWayToFinish();
+    }
+
 }
