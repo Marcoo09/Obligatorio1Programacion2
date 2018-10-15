@@ -8,18 +8,12 @@ public class Player implements Comparable{
     private String nickName;
     private int age;
     private int wonGames;
-    private int color;
 
     public Player(String name, String nickName, int age) {
         this.name = name;
         this.nickName = nickName;
         this.age = age;
         this.wonGames = 0;
-        this.color = 0;
-    }
-
-    public int getColor() {
-        return color;
     }
 
     public String getName() {

@@ -14,7 +14,6 @@ public class Match implements Comparable {
     private ArrayList<GameBoard> listOfGameBoards;
     private LocalDateTime date;
     private Player winner;
-    private int remainingPlays;
     private String wayToFinish;
     private int qtyOfMovements = 0;
     private boolean finished;
@@ -76,14 +75,6 @@ public class Match implements Comparable {
         this.winner = winner;
     }
 
-    public int getRemainingPlays() {
-        return remainingPlays;
-    }
-
-    public void setRemainingPlays(int remainingPlays) {
-        this.remainingPlays = remainingPlays;
-    }
-
     public void setDate(LocalDateTime date) {
         this.date = date;
     }
@@ -99,11 +90,8 @@ public class Match implements Comparable {
     public boolean isFinished() {
         String wayToFinalize = this.getWayToFinish();
         boolean returnedValue = false;
-        boolean allReds = false;
-        boolean allBlues = false;
         int qtyOfReds = 0;
         int qtyOfBlues = 0;
-        boolean empate = false;
 
         GameBoard lastGameBoard = this.getListOfGameBoard().get(this.getListOfGameBoard().size() - 1);
         Token[][] lastMatrix = lastGameBoard.getTokenMatrix();
@@ -123,7 +111,7 @@ public class Match implements Comparable {
                     }
                 }
                 //Verify if all are blue 
-                for (int i = 0; i < 9 && allBlues; i++) {
+                for (int i = 0; i < 9; i++) {
                     if (lastMatrix[7][i] != null && lastMatrix[7][i].getPlayer().equals(lastGameBoard.getPlayerBlue())) {
                         qtyOfBlues++;
                     }
@@ -153,32 +141,33 @@ public class Match implements Comparable {
             }
             //Case 3
         } else {
-
+            int qtyOfRedsTokens = 0;
+            int qtyOfBluesTokens = 0;
+            
+            System.out.println("Entre al else");
             //Verify if all tokens are red
-            for (int i = 0; i < 9 && allReds; i++) {
-                if (lastMatrix[0][i] != null && lastMatrix[0][i].getPlayer().equals(lastGameBoard.getPlayerRed())) {
-                    allReds = true;
-                } else {
-                    allReds = false;
+            for (int i = 0; i < 9; i++) {
+                if (lastMatrix[0][i] != null && (lastMatrix[0][i].getPlayer().equals(lastGameBoard.getPlayerRed())) ) {
+                    System.out.println("Entre rojo");
+                    qtyOfRedsTokens++;
                 }
             }
 
-            if (allReds) {
+            if (qtyOfRedsTokens == 8) {
+                System.out.println("Entre al final");
                 this.setFinished(true);
                 returnedValue = true;
                 this.setWinner(lastGameBoard.getPlayerRed());
             }
             
             //Verify if all tokens are red
-            for (int i = 0; i < 9 && allBlues; i++) {
+            for (int i = 0; i < 9; i++) {
                 if (lastMatrix[7][i] != null && lastMatrix[7][i].getPlayer().equals(lastGameBoard.getPlayerBlue())) {
-                    allBlues = true;
-                } else {
-                    allBlues = false;
+                    qtyOfBluesTokens++;
                 }
             }
             
-            if (allBlues) {
+            if (qtyOfBluesTokens == 8) {
                 this.setFinished(true);
                 returnedValue = true;
                 this.setWinner(lastGameBoard.getPlayerBlue());

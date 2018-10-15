@@ -47,8 +47,9 @@ public class Interface {
 
                     gameboard = new GameBoard(match.getListOfPlayers());
 
-                    Interface.drawDefaultGameBoard(gameboard, match);
-
+                   // Interface.drawDefaultGameBoard(gameboard, match);
+                   Interface.harcodeValues(gameboard, match);
+                   
                     Interface.turnByTurn(game, match, gameboard);
 
                     Interface.anounceWinner(match);
@@ -400,10 +401,76 @@ public class Interface {
         }
 
     }
+    /*Prueba Harcodear*/
+     public static void harcodeValues(GameBoard gameboard, Match match) {
+        Token tokenMatrix[][] = gameboard.getTokenMatrix();
+        int row = tokenMatrix.length;
+        int col = tokenMatrix[0].length;
+        String mode = gameboard.getMode();
+        int[] tokens = {0, 1, 2, 3, 4, 5, 6, 7, 8};
+        
+        int counter = 0;
+        Player currentPlayer;
 
+        Token currentToken = new Token();
+
+        for (int i = 0; i < row; i += row - 1) {
+            if(counter == 0){
+                currentPlayer = gameboard.getPlayerRed();
+            }else{
+                currentPlayer = gameboard.getPlayerBlue();
+            }
+                    
+            for (int j = 1; j < col; j++) {
+                currentToken = new Token();
+                if (i == 0) {
+                    currentToken.setPlayer(currentPlayer);
+                    currentToken.setTokenNumber(tokens[j]);
+                    currentToken.setColor("\033[31m");
+                    tokenMatrix[i + 1][j] = currentToken;
+                } else {
+                    currentToken.setPlayer(currentPlayer);
+                    currentToken.setTokenNumber(tokens[col - j]);
+                    currentToken.setColor("\033[34m");
+                    tokenMatrix[i - 1][j - 1] = currentToken;
+                }
+            }
+            counter++;
+        }
+        
+
+        if (mode.equalsIgnoreCase("verr")) {
+            for (int i = 0; i < row; i++) {
+                for (int j = 0; j < col; j++) {
+                    if (tokenMatrix[i][j] != null) {
+                        System.out.print(tokenMatrix[i][j].getColor() + tokenMatrix[i][j].getTokenNumber() + " ");
+                    } else {
+                        System.out.print("\033[30m" + "- ");
+                    }
+                }
+                System.out.println("");
+            }
+        } else if (mode.equalsIgnoreCase("vern")) {
+            for (int i = 0; i < row; i++) {
+                System.out.println("+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+");
+                for (int j = 0; j < col; j++) {
+                    if (tokenMatrix[i][j] != null) {
+                        System.out.print("| " + tokenMatrix[i][j].getColor() + tokenMatrix[i][j].getTokenNumber() + "\033[30m ");
+                    } else {
+                        System.out.print("\033[30m" + "|   ");
+                    }
+                }
+                System.out.print("|");
+
+                System.out.println("");
+            }
+            System.out.print("+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+\n\n");
+
+        }
+
+    }
+    /*Prueba harcodear*/
     public static void drawCurrentGameBoard(Match match, GameBoard gameboard, boolean replayMatch) {
-        Scanner input = new Scanner(System.in);
-
         Token tokenMatrix[][] = gameboard.getTokenMatrix();
         int row = tokenMatrix.length;
         int col = tokenMatrix[0].length;
