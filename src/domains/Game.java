@@ -30,10 +30,6 @@ public class Game {
     public void addPlayer(Player player){
         this.getListOfPlayers().add(player);
     }
-   
-    public ArrayList<GameBoard> replayMatch(Match match){
-        return new ArrayList();
-    }
     
     public void sortMatchesByDateTime(){
         Collections.sort(this.getListOfMatches());

@@ -37,36 +37,36 @@ public class Interface {
             case "a":
                 Player newPlayer = Interface.addPlayer();
                 game.addPlayer(newPlayer);
-                System.out.println("JUGADOR REGISTRADO");
+                System.out.println("<----JUGADOR REGISTRADO---->");
                 break;
             case "b":
                 if (game.getListOfPlayers().size() > 1) {
                     Match match = Interface.beginMatch(game);
                     game.addMatch(match);
-                    System.out.println("EMPIEZA EL JUEGO");
+                    System.out.println("<----EMPIEZA EL JUEGO---->\n");
 
                     gameboard = new GameBoard(match.getListOfPlayers());
 
-                   // Interface.drawDefaultGameBoard(gameboard, match);
-                   Interface.harcodeValues(gameboard, match);
+                    Interface.drawDefaultGameBoard(gameboard, match);
+                  // Interface.harcodeValues(gameboard, match);
                    
                     Interface.turnByTurn(game, match, gameboard);
 
                     Interface.anounceWinner(match);
                 } else {
-                    System.out.println("Debes registrar por lo menos dos jugadores");
+                    System.out.println("<----DEBES REGISTRAR POR LO MENOS DOS JUGADORES---->");
                 }
                 break;
             case "c":
                 if (game.getListOfMatches().isEmpty()) {
-                    System.out.println("Debes jugar antes alguna partida para poder replicar una");
+                    System.out.println("<----DEBES JUGAR ANTES ALGUNA PARTIDA PARA PODER REPLICAR UNA---->");
                 } else {
                     Interface.replayMatch(game);
                 }
                 break;
             case "d":
                 if (game.getListOfPlayers().isEmpty()||game.getListOfMatches().isEmpty()) {
-                    System.out.println("Debes jugar una partida previamente");
+                    System.out.println("<----DEBES JUGAR UNA PARTIDAD PREVIAMENTE---->");
                 } else {
                     Interface.showRanking(game);
                 }
@@ -75,7 +75,7 @@ public class Interface {
                 //Finalize the program
                 System.out.println("Salir");
                 executeProgram = false;
-                System.out.println("Ha finalizado la ejecución del programa");
+                System.out.println("<----HA FINALIZADO LA EJECUCIÓN DEL PROGRAMA---->");
                 break;
             default:
                 System.out.println("OPCIÓN NO VÁLIDA");
@@ -208,10 +208,7 @@ public class Interface {
 
     }
 
-    public static void turn(Game game, Match match, GameBoard gameboard, String playerColor) {
-        Scanner input = new Scanner(System.in);
-
-        GameBoard actualGameBoard = gameboard;
+    public static void turn(Game game, Match match, GameBoard actualGameBoard, String playerColor) {
         Player player = null;
         Player notCurrentPlayer = null;
 
@@ -264,8 +261,8 @@ public class Interface {
                     
                     break blockWhile;
                 } else if (allDataAboutMovement.equals("vern") || allDataAboutMovement.equals("verr")) {
-                    gameboard.setMode(allDataAboutMovement);
-                    Interface.drawCurrentGameBoard(match, gameboard, false);
+                    actualGameBoard.setMode(allDataAboutMovement);
+                    Interface.drawCurrentGameBoard(match, actualGameBoard, false);
                 } else {
 
                     if (allDataAboutMovement.length() == 2) {
@@ -334,8 +331,10 @@ public class Interface {
                                 System.out.println("\nDebes ingresar (S) o (N)\n");
                                 continueTurn = Interface.askForString("si quieres seguir jugando (S) o (N)");
                                 continueTurn.trim();
-                            } else {
-                                validResponse = true;
+                            } else if(continueTurn.isEmpty()){
+                                       validResponse = false; 
+                            }else{
+                                    validResponse = true;
                             }
                         }
 
@@ -569,6 +568,7 @@ public class Interface {
     }
 
     /*Utils used above*/
+    
     //This method ask for a String and return the value
     public static String askForString(String whatToAsk) {
         Scanner inputString = new Scanner(System.in);

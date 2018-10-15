@@ -1,6 +1,5 @@
 package controllers;
 
-import java.util.*;
 import domains.*;
 import views.Interface;
 
@@ -9,7 +8,7 @@ import views.Interface;
  */
 public class Controller {
 
-    public static void main(String[] args) throws CloneNotSupportedException {
+    public static void main(String[] args){
         
         /*Instance of view*/
         Interface view = new Interface();
@@ -22,10 +21,10 @@ public class Controller {
         String[] menuOptions = {"Registrar jugador", "Jugar Partida", "Replicar Partida", "Ranking", "Salir"};
         
         /*Validator of Program*/
-        boolean executeProgram = Interface.executeMenu(game, gameboard, menuOptions);
+        boolean executeProgram = true;
                 
         while (executeProgram) {
-            Interface.executeMenu(game, gameboard, menuOptions);
+            executeProgram = Interface.executeMenu(game, gameboard, menuOptions);
         }
 
     }

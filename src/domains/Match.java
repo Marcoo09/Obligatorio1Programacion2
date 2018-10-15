@@ -144,17 +144,14 @@ public class Match implements Comparable {
             int qtyOfRedsTokens = 0;
             int qtyOfBluesTokens = 0;
             
-            System.out.println("Entre al else");
             //Verify if all tokens are red
             for (int i = 0; i < 9; i++) {
                 if (lastMatrix[0][i] != null && (lastMatrix[0][i].getPlayer().equals(lastGameBoard.getPlayerRed())) ) {
-                    System.out.println("Entre rojo");
                     qtyOfRedsTokens++;
                 }
             }
 
             if (qtyOfRedsTokens == 8) {
-                System.out.println("Entre al final");
                 this.setFinished(true);
                 returnedValue = true;
                 this.setWinner(lastGameBoard.getPlayerRed());
