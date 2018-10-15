@@ -3,11 +3,7 @@ package views;
 import java.util.ArrayList;
 import java.util.InputMismatchException;
 import java.util.Scanner;
-import domains.Game;
-import domains.GameBoard;
-import domains.Match;
-import domains.Player;
-import domains.Token;
+import domains.*;
 import java.util.Arrays;
 import java.util.Iterator;
 
@@ -48,8 +44,7 @@ public class Interface {
                     gameboard = new GameBoard(match.getListOfPlayers());
 
                     Interface.drawDefaultGameBoard(gameboard, match);
-                  // Interface.harcodeValues(gameboard, match);
-                   
+
                     Interface.turnByTurn(game, match, gameboard);
 
                     Interface.anounceWinner(match);
@@ -65,7 +60,7 @@ public class Interface {
                 }
                 break;
             case "d":
-                if (game.getListOfPlayers().isEmpty()||game.getListOfMatches().isEmpty()) {
+                if (game.getListOfPlayers().isEmpty() || game.getListOfMatches().isEmpty()) {
                     System.out.println("<----DEBES JUGAR UNA PARTIDAD PREVIAMENTE---->");
                 } else {
                     Interface.showRanking(game);
@@ -143,7 +138,7 @@ public class Interface {
 
         int sizeOfPlayerList = possiblePlayers.size();
 
-        System.out.println("Elige los jugadores");
+        System.out.println("\nElige los jugadores");
         for (int i = 0; i < sizeOfPlayerList; i++) {
             System.out.print("\n" + (i + 1) + ": " + game.getListOfPlayers().get(i));
         }
@@ -160,15 +155,15 @@ public class Interface {
             SecondPlayerIsCorrect = Interface.validateAttribute(p2, 1, sizeOfPlayerList);
             if (p1 == p2) {
                 SecondPlayerIsCorrect = false;
-                System.out.println("Elige un jugador distinto al 1");
+                System.out.println("\nElige un jugador distinto al 1");
             }
         }
         player2 = possiblePlayers.get(p2 - 1);
 
-        System.out.println("Elige una de las siguientes formas de terminar el juego: ");
+        System.out.println("\nElige una de las siguientes formas de terminar el juego: ");
         System.out.println("");
         for (int i = 0; i < wayToFinishOptions.length; i++) {
-            System.out.println((i + 1) + " " + wayToFinishOptions[i] + "\n");
+            System.out.println((i + 1) + " ) " + wayToFinishOptions[i] + "\n");
         }
         while (!wayToFinishValidator) {
             chosenOption = Interface.askForNumeric("opción");
@@ -226,6 +221,8 @@ public class Interface {
         boolean playAtLeastOneTime;
         boolean validResponse = false;
 
+        int qtyOfMovements = 0;
+
         ArrayList<Integer> posibleTokenMovements = new ArrayList<>(Arrays.asList(1, 2, 3, 4, 5, 6, 7, 8));
 
         String allDataAboutMovement;
@@ -236,20 +233,21 @@ public class Interface {
         int tokenToMove = 0;
         int positionOfTokenX;
         int positionOfTokenY;
-        
+
         posibleTokenMovements = Interface.removeTokensInTheLastRow(actualGameBoard, posibleTokenMovements, playerColor, player);
 
-                                            
         blockWhile:
         while (isTurn) {
             playAtLeastOneTime = false;
 
-            System.out.println("Posibles movimientos: ");
-            Interface.showPosibleDirectionsMovements(posibleTokenMovements, tokenToMove);
-            System.out.println("\n(D)DERECHA (I)IZQUIERA (A)ADELANTE \n");
+            if (qtyOfMovements == 0) {
+                System.out.println("Posibles movimientos: ");
+                Interface.showPosibleDirectionsMovements(posibleTokenMovements, tokenToMove);
+                System.out.println("\n(D)DERECHA (I)IZQUIERA (A)ADELANTE \n");
+            }
 
             System.out.println("Posibles jugadas: \n                  MOVIMIENTO\n                  CAMBIO DE TABLERO\n                  X para retirarse");
-           
+
             while (!validMovement) {
                 System.out.println("");
                 allDataAboutMovement = Interface.askForString("una jugada");
@@ -258,7 +256,7 @@ public class Interface {
                 if (allDataAboutMovement.equals("x")) {
                     match.setWinner(notCurrentPlayer);
                     match.setFinished(true);
-                    
+
                     break blockWhile;
                 } else if (allDataAboutMovement.equals("vern") || allDataAboutMovement.equals("verr")) {
                     actualGameBoard.setMode(allDataAboutMovement);
@@ -296,24 +294,23 @@ public class Interface {
 
                                     playAtLeastOneTime = true;
                                 } else {
-                                    System.out.println("El movimiento no es válido porque hay otra ficha o porque te sales del tablero \n");
+                                    System.out.println("\nEL MOVIMIENTO NO ES VÁLIDO PORQUE HAY OTRA FICHA O PORQUE TE SALES DEL TABLERO\n");
                                 }
 
                             } else {
-                                System.out.println("\nLa ficha o la dirección no son válidas");
+                                System.out.println("\nLA FICHA O LA DIRECCIÓN NO SON VÁLIDAS");
                             }
                         } catch (NumberFormatException e) {
-                            //java.lang.NumberFormatException
-                            System.out.println("El primer dígito debe ser un número");
+                            System.out.println("\nEL PRIMER DÍGITO DEBE SER UN NÚMERO");
                             validMovement = false;
                         }
                     } else {
-                        System.out.println("Ingrese un valor correcto");
+                        System.out.println("\nINGRESE UN VALOR CORRECTO");
                     }
                 }
 
             }
-            
+
             if (match.isFinished()) {
                 isTurn = false;
             } else {
@@ -323,19 +320,24 @@ public class Interface {
                         System.out.println("No tienes más movimientos posibles \n");
                         isTurn = false;
                     } else {
+                        qtyOfMovements++;
+                        System.out.println("Posibles movimientos: ");
+                        Interface.showPosibleDirectionsMovements(posibleTokenMovements, tokenToMove);
+                        System.out.println("\n(D)DERECHA (I)IZQUIERA (A)ADELANTE \n");
+
                         continueTurn = Interface.askForString("si quieres seguir jugando (S) o (N)");
                         continueTurn.trim();
 
                         while (!validResponse) {
-                            if (!(continueTurn.equalsIgnoreCase("S") || continueTurn.equalsIgnoreCase("N"))) {
-                                System.out.println("\nDebes ingresar (S) o (N)\n");
+
+                            if (continueTurn.equalsIgnoreCase("s") || continueTurn.equalsIgnoreCase("n")) {
+                                validResponse = true;
+                            } else {
+                                System.out.println("\nDEBES INGRESAR (S) o (N)\n");
                                 continueTurn = Interface.askForString("si quieres seguir jugando (S) o (N)");
                                 continueTurn.trim();
-                            } else if(continueTurn.isEmpty()){
-                                       validResponse = false; 
-                            }else{
-                                    validResponse = true;
                             }
+
                         }
 
                         if (continueTurn.equalsIgnoreCase("N")) {
@@ -403,75 +405,7 @@ public class Interface {
         }
 
     }
-    /*Prueba Harcodear*/
-     public static void harcodeValues(GameBoard gameboard, Match match) {
-        Token tokenMatrix[][] = gameboard.getTokenMatrix();
-        int row = tokenMatrix.length;
-        int col = tokenMatrix[0].length;
-        String mode = gameboard.getMode();
-        int[] tokens = {0, 1, 2, 3, 4, 5, 6, 7, 8};
-        
-        int counter = 0;
-        Player currentPlayer;
 
-        Token currentToken = new Token();
-
-        for (int i = 0; i < row; i += row - 1) {
-            if(counter == 0){
-                currentPlayer = gameboard.getPlayerRed();
-            }else{
-                currentPlayer = gameboard.getPlayerBlue();
-            }
-                    
-            for (int j = 1; j < col; j++) {
-                currentToken = new Token();
-                if (i == 0) {
-                    currentToken.setPlayer(currentPlayer);
-                    currentToken.setTokenNumber(tokens[j]);
-                    currentToken.setColor("\033[31m");
-                    tokenMatrix[i + 1][j] = currentToken;
-                } else {
-                    currentToken.setPlayer(currentPlayer);
-                    currentToken.setTokenNumber(tokens[col - j]);
-                    currentToken.setColor("\033[34m");
-                    tokenMatrix[i - 1][j - 1] = currentToken;
-                }
-            }
-            counter++;
-        }
-        
-
-        if (mode.equalsIgnoreCase("verr")) {
-            for (int i = 0; i < row; i++) {
-                for (int j = 0; j < col; j++) {
-                    if (tokenMatrix[i][j] != null) {
-                        System.out.print(tokenMatrix[i][j].getColor() + tokenMatrix[i][j].getTokenNumber() + " ");
-                    } else {
-                        System.out.print("\033[30m" + "- ");
-                    }
-                }
-                System.out.println("");
-            }
-        } else if (mode.equalsIgnoreCase("vern")) {
-            for (int i = 0; i < row; i++) {
-                System.out.println("+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+");
-                for (int j = 0; j < col; j++) {
-                    if (tokenMatrix[i][j] != null) {
-                        System.out.print("| " + tokenMatrix[i][j].getColor() + tokenMatrix[i][j].getTokenNumber() + "\033[30m ");
-                    } else {
-                        System.out.print("\033[30m" + "|   ");
-                    }
-                }
-                System.out.print("|");
-
-                System.out.println("");
-            }
-            System.out.print("+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+\n\n");
-
-        }
-
-    }
-    /*Prueba harcodear*/
     public static void drawCurrentGameBoard(Match match, GameBoard gameboard, boolean replayMatch) {
         Token tokenMatrix[][] = gameboard.getTokenMatrix();
         int row = tokenMatrix.length;
@@ -568,7 +502,6 @@ public class Interface {
     }
 
     /*Utils used above*/
-    
     //This method ask for a String and return the value
     public static String askForString(String whatToAsk) {
         Scanner inputString = new Scanner(System.in);
@@ -778,7 +711,7 @@ public class Interface {
         int size = posibleTokenMovements.size();
         int currentTokenValue;
         ArrayList<Integer> returnedArrayList = new ArrayList<>();
-        
+
         if (playerColor.equalsIgnoreCase("red")) {
             for (int i = 0; i < size; i++) {
                 currentTokenValue = posibleTokenMovements.get(i);
@@ -801,13 +734,13 @@ public class Interface {
 
         return returnedArrayList;
     }
-    
-     public static void showRanking(Game game){
+
+    public static void showRanking(Game game) {
         game.sortPlayersByWonGames();
         ArrayList<Player> listOfPlayers = game.getListOfPlayers();
         System.out.println("\n      :: RANKING ::     \n");
         for (int i = 0; i < listOfPlayers.size(); i++) {
-            System.out.println("..: "+(i+1)+ " :.." + listOfPlayers.get(i));
+            System.out.println("..: " + (i + 1) + " :.." + listOfPlayers.get(i));
         }
     }
 

@@ -3,8 +3,8 @@ package domains;
 /**
  * @author Marco Fiorito and Felipe Najson
  */
+public class Token implements Cloneable {
 
-public class Token implements Cloneable{
     private String color;
     private int tokenNumber;
     private Player player;
@@ -14,13 +14,13 @@ public class Token implements Cloneable{
         this.tokenNumber = tokenNumber;
         this.player = player;
     }
-    
-    public Token(){
+
+    public Token() {
         this.color = "\033[30m";
         this.tokenNumber = 0;
         this.player = null;
     }
- 
+
     public String getColor() {
         return color;
     }
@@ -48,15 +48,14 @@ public class Token implements Cloneable{
     @Override
     public Object clone() {
         Object o = null;
-        
-        try{
+
+        try {
             o = super.clone();
-        }catch(CloneNotSupportedException e){
-            
+        } catch (CloneNotSupportedException e) {
+
         }
-        
-        return o; 
+
+        return o;
     }
-    
-    
+
 }

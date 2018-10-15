@@ -113,7 +113,6 @@ public class GameBoard{
         this.setTokenPositionX(positionX);
         this.setTokenPositionY(positionY);
 
-        //return new int[]{positionX, positionY};
     }
 
     public ArrayList<Integer> sumOfDiagonalsAndEdges(int initialValue, int positionOfTokenX, int positionOfTokenY) {
