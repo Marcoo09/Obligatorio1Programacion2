@@ -15,7 +15,7 @@ public class Match implements Comparable {
     private LocalDateTime date;
     private Player winner;
     private String wayToFinish;
-    private int qtyOfMovements = 0;
+    private int qtyOfMovements;
     private boolean finished;
 
     public static String[] ways = {"movimientos", "pieza", "piezas"};

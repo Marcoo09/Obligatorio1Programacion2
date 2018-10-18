@@ -43,8 +43,8 @@ public class Interface {
 
                     gameboard = new GameBoard(match.getListOfPlayers());
 
-                    Interface.drawDefaultGameBoard(gameboard, match);
-
+                   Interface.drawDefaultGameBoard(gameboard, match);
+                    
                     Interface.turnByTurn(game, match, gameboard);
 
                     Interface.anounceWinner(match);
@@ -488,10 +488,10 @@ public class Interface {
 
         Match currentMatch = null;
 
-        System.out.println("Elige una de las siguientes partidas para repetir:\n");
+        System.out.println("Elige una de las siguientes partidas para repetir (número):\n");
         for (int i = 0; i < listOfMatches.size(); i++) {
             currentMatch = listOfMatches.get(i);
-            System.out.println("Partida " + (i + 1) + ": " + currentMatch);
+            System.out.println("Partida (" + (i + 1) + ") : " + currentMatch);
         }
 
         while (!indexOfMatchValidator) {
@@ -502,14 +502,15 @@ public class Interface {
         Match selectedMatch = listOfMatches.get(chosenOption - 1);
         ArrayList<GameBoard> listOfGameBoards = selectedMatch.getListOfGameBoard();
 
-        System.out.println("Size " + listOfGameBoards.size());
-
         for (int i = 0; i < listOfGameBoards.size() && !exitValidator; i++) {
             entry = "";
             Interface.drawCurrentGameBoard(currentMatch, listOfGameBoards.get(i), true);
             while (!entry.equalsIgnoreCase("n") && !exitValidator) {
                 entry = input.nextLine();
                 exitValidator = entry.equalsIgnoreCase("s");
+                if(!entry.equalsIgnoreCase("n") && !exitValidator){
+                    System.out.println("ESCRIBE UN VALOR VÁLIDO (n para avanzar o s para salir)");
+                }
 
             }
         }
