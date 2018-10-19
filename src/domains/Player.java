@@ -55,7 +55,7 @@ public class Player implements Comparable{
 
     @Override
     public String toString() {
-        return "\n•Nombre: " + this.getName() + "\n•NickName: " + this.getNickName() + "\n•Edad: " + this.getAge()+ "\n•Partidas ganadas: " + this.getWonGames() + "\n";
+        return "\n•Nombre: " + this.getName() + "\n•Alias: " + this.getNickName() + "\n•Edad: " + this.getAge()+ "\n•Partidas ganadas: " + this.getWonGames() + "\n";
     }
 
     @Override

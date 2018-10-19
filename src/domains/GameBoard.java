@@ -64,6 +64,7 @@ public class GameBoard{
         return this.sumOfDiagonalsAndEdges(parmNumber, positionOfTokenX, positionOfTokenY);
     }
 
+    //Intial matrix of the game
     public void fillInitialMatrix(int[] tokenNumbers) {
         int row = this.tokenMatrix.length;
         int col = this.tokenMatrix[0].length;
@@ -76,12 +77,16 @@ public class GameBoard{
             currentPlayer = listOfPlayers.get(counter);
             for (int j = 1; j < col; j++) {
                 currentToken = new Token();
+                
+                //if is the first the row, draw the tokens of blue player
                 if (i == 0) {
                     currentToken.setPlayer(currentPlayer);
                     currentToken.setTokenNumber(tokenNumbers[j]);
                     currentToken.setColor("\033[34m");
                     this.tokenMatrix[i][j] = currentToken;
-                } else {
+                }
+                //if is the the row is the last, draw the tokens of red player
+                else {
                     currentToken.setPlayer(currentPlayer);
                     currentToken.setTokenNumber(tokenNumbers[col - j]);
                     currentToken.setColor("\033[31m");
@@ -179,7 +184,7 @@ public class GameBoard{
         positionX = positionOfTokenX;
         positionY = positionOfTokenY;
 
-        //Horizontal SUm
+        //Horizontal Sum
         for (int i = 0; i < tokenMatrix.length; i++) {
             if (tokenMatrix[i][positionX] != null && i != positionY) {
                 horizontalSum += tokenMatrix[i][positionX].getTokenNumber();

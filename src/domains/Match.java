@@ -100,17 +100,17 @@ public class Match implements Comparable {
         if (wayToFinalize.equals("movimientos")) {
             int qtyOfMovements = this.getQtyOfMovements();
             this.setQtyOfMovements(qtyOfMovements - 1);
-            
+
             if (this.getQtyOfMovements() == 0) {
                 returnedValue = true;
                 this.setFinished(true);
-                //Verify what player have more token in the other side
+                //Verify what player have more token in the other side (RED Player)
                 for (int i = 0; i < 9; i++) {
                     if (lastMatrix[0][i] != null && lastMatrix[0][i].getPlayer().equals(lastGameBoard.getPlayerRed())) {
                         qtyOfReds++;
                     }
                 }
-                //Verify if all are blue 
+                //Verify what player have more token in the other side (Blue Player)
                 for (int i = 0; i < 9; i++) {
                     if (lastMatrix[7][i] != null && lastMatrix[7][i].getPlayer().equals(lastGameBoard.getPlayerBlue())) {
                         qtyOfBlues++;
@@ -127,6 +127,7 @@ public class Match implements Comparable {
             }
             //Case 2    
         } else if (wayToFinalize.equals("pieza")) {
+            //Verify if one token at the opposite side
             for (int i = 0; i < 9 && !returnedValue; i++) {
                 if (lastMatrix[0][i] != null && lastMatrix[0][i].getPlayer().equals(lastGameBoard.getPlayerRed())) {
                     this.setFinished(true);
@@ -143,27 +144,27 @@ public class Match implements Comparable {
         } else {
             int qtyOfRedsTokens = 0;
             int qtyOfBluesTokens = 0;
-            
+
             //Verify if all tokens are red
             for (int i = 0; i < 9; i++) {
-                if (lastMatrix[0][i] != null && (lastMatrix[0][i].getPlayer().equals(lastGameBoard.getPlayerRed())) ) {
+                if (lastMatrix[0][i] != null && (lastMatrix[0][i].getPlayer().equals(lastGameBoard.getPlayerRed()))) {
                     qtyOfRedsTokens++;
                 }
             }
-
+            
             if (qtyOfRedsTokens == 8) {
                 this.setFinished(true);
                 returnedValue = true;
                 this.setWinner(lastGameBoard.getPlayerRed());
             }
-            
-            //Verify if all tokens are red
+
+            //Verify if all tokens are blue
             for (int i = 0; i < 9; i++) {
                 if (lastMatrix[7][i] != null && lastMatrix[7][i].getPlayer().equals(lastGameBoard.getPlayerBlue())) {
                     qtyOfBluesTokens++;
                 }
             }
-            
+
             if (qtyOfBluesTokens == 8) {
                 this.setFinished(true);
                 returnedValue = true;
@@ -183,7 +184,7 @@ public class Match implements Comparable {
     @Override
     public String toString() {
         LocalDateTime time = this.getDateTime();
-        return " Día: " + time.getDayOfMonth() + ". Hora: " + time.getHour() + ":" + time.getMinute() + " - Y la forma de finalización es: "  + this.getWayToFinish();
+        return " Día: " + time.getDayOfMonth() + ". Hora: " + time.getHour() + ":" + time.getMinute() + " - Y la forma de finalización es: " + this.getWayToFinish();
     }
 
 }

@@ -42,11 +42,11 @@ public class Interface {
                     System.out.println("<----EMPIEZA EL JUEGO---->\n");
 
                     gameboard = new GameBoard(match.getListOfPlayers());
-
-                   Interface.drawDefaultGameBoard(gameboard, match);
-                    
+                    //Draw the first the gameboard of the match
+                    Interface.drawDefaultGameBoard(gameboard, match);
+                    //All the logic of the game
                     Interface.turnByTurn(game, match, gameboard);
-
+                    //When the match is finished show who is the winner
                     Interface.anounceWinner(match);
                 } else {
                     System.out.println("<----DEBES REGISTRAR POR LO MENOS DOS JUGADORES---->");
@@ -84,11 +84,11 @@ public class Interface {
         ArrayList<Player> listOfPlayers = game.getListOfPlayers();
         //Variables of Player
         String name;
-        String nickName ="" ;
+        String nickName = "";
         int age = 0;
-        
-        Player auxPlayer = new Player("","",0);
-        
+
+        Player auxPlayer = new Player("", "", 0);
+
         //Variables used in validators
         boolean ageValidator = false;
         boolean nickNameValidator = false;
@@ -99,15 +99,15 @@ public class Interface {
 
         name = Interface.askForString("nombre");
         //Validation of nickname
-        while(!nickNameValidator){
-                  nickName = Interface.askForString("alias");
-                  auxPlayer.setNickName(nickName);
-                  nickNameValidator = !(listOfPlayers.contains(auxPlayer));
-                  
-                  if(!nickNameValidator){
-                      System.out.println("ALIAS REPETIDO");
-                  }
-        
+        while (!nickNameValidator) {
+            nickName = Interface.askForString("alias");
+            auxPlayer.setNickName(nickName);
+            nickNameValidator = !(listOfPlayers.contains(auxPlayer));
+
+            if (!nickNameValidator) {
+                System.out.println("ALIAS REPETIDO");
+            }
+
         }
         //Validation of age
         while (!ageValidator) {
@@ -153,16 +153,18 @@ public class Interface {
         int sizeOfPlayerList = possiblePlayers.size();
 
         System.out.println("\nElige los jugadores");
+        //Show the list of players
         for (int i = 0; i < sizeOfPlayerList; i++) {
             System.out.print("\n" + (i + 1) + ": " + game.getListOfPlayers().get(i));
         }
+        //Choose blue player
         while (!firstPlayerIsCorrect) {
             System.out.println("");
             p1 = Interface.askForNumeric("el jugador que tendrá el color azul");
             firstPlayerIsCorrect = Interface.validateAttribute(p1, 1, sizeOfPlayerList);
         }
         player1 = possiblePlayers.get(p1 - 1);
-
+        //Choose red player
         while (!SecondPlayerIsCorrect) {
             System.out.println("");
             p2 = Interface.askForNumeric("el jugador que tendra el color rojo");
@@ -174,6 +176,7 @@ public class Interface {
         }
         player2 = possiblePlayers.get(p2 - 1);
 
+        //Show and Choose the way of finalize the game
         System.out.println("\nElige una de las siguientes formas de terminar el juego: ");
         System.out.println("");
         for (int i = 0; i < wayToFinishOptions.length; i++) {
@@ -219,6 +222,7 @@ public class Interface {
 
     public static void turn(Game game, Match match, GameBoard actualGameBoard, String playerColor) {
         Player player = null;
+        //It's used  if one player leaves the match to assign this as winner
         Player notCurrentPlayer = null;
 
         if (playerColor.equals("red")) {
@@ -241,7 +245,6 @@ public class Interface {
 
         String allDataAboutMovement;
         String movementDirection;
-        String mode;
         String continueTurn;
 
         int tokenToMove = 0;
@@ -270,7 +273,6 @@ public class Interface {
                 if (allDataAboutMovement.equals("x")) {
                     match.setWinner(notCurrentPlayer);
                     match.setFinished(true);
-
                     break blockWhile;
                 } else if (allDataAboutMovement.equals("vern") || allDataAboutMovement.equals("verr")) {
                     actualGameBoard.setMode(allDataAboutMovement);
@@ -279,29 +281,30 @@ public class Interface {
 
                     if (allDataAboutMovement.length() == 2) {
                         try {
+                            //Difference between direction and the token to move.
                             tokenToMove = Integer.parseInt("" + allDataAboutMovement.charAt(0));
                             movementDirection = Character.toString(allDataAboutMovement.charAt(1));
 
-                            //Validate if the movement is posible and the direction is correct
+                            //Validate if the token selected is posible and the direction is correct
                             if (posibleTokenMovements.contains(tokenToMove) && Interface.validMovementDirectionInput(movementDirection)) {
 
                                 actualGameBoard.searchPositionOfToken(tokenToMove, player);
 
                                 positionOfTokenX = actualGameBoard.getTokenPositionX();
                                 positionOfTokenY = actualGameBoard.getTokenPositionY();
-
+                                //Validate if the new positions is in the matrix or if exist another token in this position
                                 validPositionMovement = Interface.validatePositionMovement(player, actualGameBoard, positionOfTokenX, positionOfTokenY, movementDirection);
                                 if (validPositionMovement) {
                                     validMovement = true;
-
+                                    //Move the piece and draw
                                     actualGameBoard = Interface.movePiece(player, actualGameBoard, positionOfTokenX, positionOfTokenY, movementDirection);
                                     Interface.drawCurrentGameBoard(match, actualGameBoard, false);
-
+                                    //Update the positions
                                     actualGameBoard.searchPositionOfToken(tokenToMove, player);
 
                                     positionOfTokenX = actualGameBoard.getTokenPositionX();
                                     positionOfTokenY = actualGameBoard.getTokenPositionY();
-
+                                    //Update the arraylist which is showed to the user.
                                     posibleTokenMovements = actualGameBoard.getPossibleMovements(tokenToMove, positionOfTokenX, positionOfTokenY);
                                     //Remove token which position is the last of the opposite front
                                     posibleTokenMovements = Interface.removeTokensInTheLastRow(actualGameBoard, posibleTokenMovements, playerColor, player);
@@ -310,7 +313,6 @@ public class Interface {
                                 } else {
                                     System.out.println("\nEL MOVIMIENTO NO ES VÁLIDO PORQUE HAY OTRA FICHA O PORQUE TE SALES DEL TABLERO\n");
                                 }
-
                             } else {
                                 System.out.println("\nLA FICHA O LA DIRECCIÓN NO SON VÁLIDAS");
                             }
@@ -324,7 +326,7 @@ public class Interface {
                 }
 
             }
-
+            
             if (match.isFinished()) {
                 isTurn = false;
             } else {
@@ -354,7 +356,7 @@ public class Interface {
                             }
 
                         }
-
+                        //if don't want to continue, leave the main while or init a new turn of the current player
                         if (continueTurn.equalsIgnoreCase("N")) {
                             isTurn = false;
                         } else {
@@ -379,7 +381,7 @@ public class Interface {
 
         GameBoard auxGameboard = new GameBoard(match.getListOfPlayers());
         Token[][] auxMatrix = auxGameboard.getTokenMatrix();
-
+        //Clone each token to save another gameboard and not modify all the gameboards
         for (int i = 0; i < tokenMatrix.length; i++) {
             for (int j = 0; j < tokenMatrix[0].length; j++) {
                 if (tokenMatrix[i][j] != null) {
@@ -429,7 +431,7 @@ public class Interface {
 
         GameBoard auxGameboard = new GameBoard(match.getListOfPlayers());
         Token[][] auxMatrix = auxGameboard.getTokenMatrix();
-
+        //Clone each token to save another gameboard and not modify all the gameboards
         for (int i = 0; i < tokenMatrix.length; i++) {
             for (int j = 0; j < tokenMatrix[0].length; j++) {
                 if (tokenMatrix[i][j] != null) {
@@ -487,7 +489,7 @@ public class Interface {
         game.sortMatchesByDateTime();
 
         Match currentMatch = null;
-
+        //Show the matteches and select one
         System.out.println("Elige una de las siguientes partidas para repetir (número):\n");
         for (int i = 0; i < listOfMatches.size(); i++) {
             currentMatch = listOfMatches.get(i);
@@ -501,14 +503,15 @@ public class Interface {
 
         Match selectedMatch = listOfMatches.get(chosenOption - 1);
         ArrayList<GameBoard> listOfGameBoards = selectedMatch.getListOfGameBoard();
-
+        //Show the gameboard one by one when the user select n
         for (int i = 0; i < listOfGameBoards.size() && !exitValidator; i++) {
             entry = "";
             Interface.drawCurrentGameBoard(currentMatch, listOfGameBoards.get(i), true);
+            //if the user write s, leave the show of match turns, else advance
             while (!entry.equalsIgnoreCase("n") && !exitValidator) {
                 entry = input.nextLine();
                 exitValidator = entry.equalsIgnoreCase("s");
-                if(!entry.equalsIgnoreCase("n") && !exitValidator){
+                if (!entry.equalsIgnoreCase("n") && !exitValidator) {
                     System.out.println("ESCRIBE UN VALOR VÁLIDO (n para avanzar o s para salir)");
                 }
 
