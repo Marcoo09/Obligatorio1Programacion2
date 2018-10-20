@@ -44,7 +44,7 @@ public class Interface {
                     gameboard = new GameBoard(match.getListOfPlayers());
                     //Draw the first the gameboard of the match
                     Interface.drawDefaultGameBoard(gameboard, match);
-                    //All the logic of the game
+                    //All the logic of plays
                     Interface.turnByTurn(game, match, gameboard);
                     //When the match is finished show who is the winner
                     Interface.anounceWinner(match);
@@ -142,7 +142,7 @@ public class Interface {
         int p1 = 0;
         int p2 = 0;
         int chosenOption = 0;
-        String[] wayToFinishOptions = {"Terminar por cierta cantidad de movimientos", "Terminar por haber llevado al lado opuesto un pieza", "Terminar por haber llevado al lado opuesto todas las piezas"};
+        String[] wayToFinishOptions = {"Terminar por cierta cantidad de movimientos", "Terminar por haber llevado al lado opuesto una pieza", "Terminar por haber llevado al lado opuesto todas las piezas"};
         /*Variables of the match*/
         Player player1;
         Player player2;
@@ -251,12 +251,12 @@ public class Interface {
         int positionOfTokenX;
         int positionOfTokenY;
 
-        posibleTokenMovements = Interface.removeTokensInTheLastRow(actualGameBoard, posibleTokenMovements, playerColor, player);
-
         blockWhile:
         while (isTurn) {
             playAtLeastOneTime = false;
-
+            
+            posibleTokenMovements =  Interface.removeTokensWithAnyPosibleMovement(actualGameBoard, posibleTokenMovements, playerColor, player);
+            
             if (qtyOfMovements == 0) {
                 System.out.println("Posibles movimientos: ");
                 Interface.showPosibleDirectionsMovements(posibleTokenMovements, tokenToMove);
@@ -306,8 +306,9 @@ public class Interface {
                                     positionOfTokenY = actualGameBoard.getTokenPositionY();
                                     //Update the arraylist which is showed to the user.
                                     posibleTokenMovements = actualGameBoard.getPossibleMovements(tokenToMove, positionOfTokenX, positionOfTokenY);
-                                    //Remove token which position is the last of the opposite front
-                                    posibleTokenMovements = Interface.removeTokensInTheLastRow(actualGameBoard, posibleTokenMovements, playerColor, player);
+                                    
+                                     //Remove tokens which hasn't any posible movement
+                                    posibleTokenMovements =  Interface.removeTokensWithAnyPosibleMovement(actualGameBoard, posibleTokenMovements, playerColor, player);;
 
                                     playAtLeastOneTime = true;
                                 } else {
@@ -725,18 +726,32 @@ public class Interface {
         }
 
     }
-
-    public static ArrayList<Integer> removeTokensInTheLastRow(GameBoard gameboard, ArrayList<Integer> posibleTokenMovements, String playerColor, Player player) {
+    
+    public static ArrayList<Integer> removeTokensWithAnyPosibleMovement(GameBoard gameboard, ArrayList<Integer> posibleTokenMovements, String playerColor, Player player) {
         int size = posibleTokenMovements.size();
         int currentTokenValue;
         ArrayList<Integer> returnedArrayList = new ArrayList<>();
-
+        
+        boolean hasMovementsToA = true;
+        boolean hasMovementsToD = true;
+        boolean hasMovementsToI = true;
+        
+        int positionOfTokenX;
+        int positionOfTokenY;
+        
         if (playerColor.equalsIgnoreCase("red")) {
             for (int i = 0; i < size; i++) {
                 currentTokenValue = posibleTokenMovements.get(i);
                 gameboard.searchPositionOfToken(currentTokenValue, player);
-
-                if (!(gameboard.getTokenPositionY() == 0)) {
+                
+                positionOfTokenX = gameboard.getTokenPositionX();
+                positionOfTokenY = gameboard.getTokenPositionY();
+                
+                hasMovementsToA = Interface.validatePositionMovement(player,gameboard,positionOfTokenX,positionOfTokenY,"A");
+                hasMovementsToD = Interface.validatePositionMovement(player,gameboard,positionOfTokenX,positionOfTokenY ,"D");
+                hasMovementsToI = Interface.validatePositionMovement(player,gameboard,positionOfTokenX,positionOfTokenY,"I");
+                
+                if(hasMovementsToA || hasMovementsToD || hasMovementsToI){
                     returnedArrayList.add(currentTokenValue);
                 }
             }
@@ -744,16 +759,23 @@ public class Interface {
             for (int i = 0; i < size; i++) {
                 currentTokenValue = posibleTokenMovements.get(i);
                 gameboard.searchPositionOfToken(currentTokenValue, player);
-
-                if (!(gameboard.getTokenPositionY() == 7)) {
+                
+                positionOfTokenX = gameboard.getTokenPositionX();
+                positionOfTokenY = gameboard.getTokenPositionY();
+                
+                hasMovementsToA = Interface.validatePositionMovement(player,gameboard,positionOfTokenX,positionOfTokenY ,"A");
+                hasMovementsToD = Interface.validatePositionMovement(player,gameboard,positionOfTokenX ,positionOfTokenY,"D");
+                hasMovementsToI = Interface.validatePositionMovement(player,gameboard,positionOfTokenX,positionOfTokenY,"I");
+                
+                if(hasMovementsToA || hasMovementsToD || hasMovementsToI){
                     returnedArrayList.add(currentTokenValue);
                 }
             }
         }
-
+        
         return returnedArrayList;
     }
-
+        
     public static void showRanking(Game game) {
         game.sortPlayersByWonGames();
         ArrayList<Player> listOfPlayers = game.getListOfPlayers();
