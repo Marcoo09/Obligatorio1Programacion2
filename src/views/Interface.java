@@ -504,16 +504,17 @@ public class Interface {
 
         Match selectedMatch = listOfMatches.get(chosenOption - 1);
         ArrayList<GameBoard> listOfGameBoards = selectedMatch.getListOfGameBoard();
-        //Show the gameboard one by one when the user select n
+        //Show the gameboard one by one when the user select ENTER
         for (int i = 0; i < listOfGameBoards.size() && !exitValidator; i++) {
-            entry = "";
+            entry = " ";
             Interface.drawCurrentGameBoard(currentMatch, listOfGameBoards.get(i), true);
             //if the user write s, leave the show of match turns, else advance
-            while (!entry.equalsIgnoreCase("n") && !exitValidator) {
+            while (!entry.equalsIgnoreCase("") && !exitValidator) {
                 entry = input.nextLine();
+               entry =  entry.trim();
                 exitValidator = entry.equalsIgnoreCase("s");
-                if (!entry.equalsIgnoreCase("n") && !exitValidator) {
-                    System.out.println("ESCRIBE UN VALOR VÁLIDO (n para avanzar o s para salir)");
+                if (!entry.equalsIgnoreCase("") && !exitValidator) {
+                    System.out.println("ESCRIBE UN VALOR VÁLIDO (Presione ENTER para avanzar o S para salir)");
                 }
 
             }
